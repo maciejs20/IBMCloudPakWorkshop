@@ -1,7 +1,9 @@
+
+
 IBM Cloud Container Workshop
 
 ---
-# Kubernetes Lab
+# Kubernetes in IBM Cloud Lab
 ---
 
 ![kube2](../images/kube2.png)
@@ -13,33 +15,31 @@ IBM Cloud Container Workshop
 
 # Introduction to IBM Cloud Kubernetes Service (IKS)
 
-IBM Cloud Kubernetes Service combines Docker and Kubernetes to deliver powerful tools, an intuitive user experience, and built-in security and isolation to automate the deployment, operation, scaling, and monitoring of containerized apps over a cluster of independent compute hosts by using the Kubernetes APIs.
+During our labs we will be using two different clusters: one installed on the server and one cloud-based. Let's meet first of them: IKS.
 
-## Docker containers
+IBM Cloud Kubernetes Service is a hosted Kubernets in IBM Cloud.
 
-Docker is an open source project that was released by dotCloud in 2013. Built on features of the existing Linux container technology (LXC), Docker became a software platform that you can use to build, test, deploy, and scale apps quickly. Docker packages software into standardized units that are called containers that include all of the elements that an app needs to run.
+It combines Docker and Kubernetes to deliver powerful tools, an intuitive user experience, and built-in security and isolation to automate the deployment, operation, scaling, and monitoring of containerized apps over a cluster of independent compute hosts by using the Kubernetes APIs.
 
-Review these concepts to learn about basic Docker concepts.
+During this lab we will be using two command line tools:
 
-**Container**
+```
+ibmcloud
+```
 
-A container is a standard way to package an app and all its dependencies so that the app can be moved between environments and run without changes. Unlike virtual machines, containers do not virtualize a device, its operating system, and the underlying hardware. Only the app code, run time, system tools, libraries, and settings are packaged inside the container. Containers run as isolated processes on the compute host where they are deployed to and share the host operating system and its hardware resources. This approach makes a container more lightweight, portable, and efficient than a virtual machine.
+which is a universal command line tool for interacting with all IBM Cloud services, including Kubernetes cluster.
 
-**Image**
+```
+kubectl
+```
 
-Every container is based on a Docker image and is considered to be an instance of an image. An image is built from a Dockerfile, which is a file that contains instructions how to build the image, and any build artifacts, such as an app, the app's configuration, and its dependencies.ls -ltr
-
-**Registry**
-
-An image registry is a place where you store, retrieve, and share Docker images. Images that are stored in a registry can either be publicly available (public registry) or accessible by a small group of users only (private registry). IBM Cloud Kubernetes Service offers public images, such as ibmliberty that you can use to get started with Docker and Kubernetes to create your first containerized app in a cluster. When it comes to enterprise applications, use a private registry like the one provided in IBM Cloud to protect your images from being used and changed by unauthorized users. 
-
-When you want to deploy a container from an image, you must make sure that the image is stored in either a public or private image registry.
+which is a Kubernetes configuration tool which works with all kubernetes installations.
 
 ## Kubernetes
 
-Kubernetes was developed by Google as part of the Borg project and handed off to the open source community in 2015. Kubernetes combines more than 15 years of Google research in running a containerized infrastructure with production work loads, open source contributions, and Docker container management tools to provide an isolated and secure app platform that is portable, extensible, and self-healing in case of failovers.
 
-Learn about the basics of how Kubernetes works with a little terminology.
+
+Let's review basic terminology:
 
 ![](./../images/descriptionk.png)
 
@@ -71,99 +71,135 @@ We will use the cluster that You have provisioned in the "Preparations" lab toda
 
 Deploy and manage your own Kubernetes cluster in the cloud. You can automate the deployment, operation, scaling, and monitoring of containerized apps in a cluster of independent compute hosts called worker nodes.
 
-**To set up the infrastructure:**
-•	Install all the CLIs for using the Kubernetes API and managing Docker images
-•	Create a private image repository in IBM Cloud Container Registry to store your images
-
-It can take 10min utes to provision your cluster. To make the most of your time, create your cluster before installing all the CLIs. 
-
-On your laptop, you have to prepare your environment to be ready to use Kubernetes and your cluster **mycluster**.
-
 ## 
 
 ### 1. Login to Your virtual machine
 
 Login to Your provisioned server. Use Your IP address, as reveived from IBM staff.
 
-```ssh root@<YOUR IP ADDRESS>```
+```ssh root@<YOUR IP ADDRESS>:port```
 
-Launch a shell or a command line and confirm that docker is installed.
+### 2. Check that ibmcloud  command
 
-`docker version`
-
-
-
-### 2. Check that ibmcloud container service and ibmcloud container registry plugins have been installed
+Ibmcloud tools allows You to connect to all services in IBM cloud. Let's checks if it works again.
 
 `ibmcloud plugin list`
 
 Results: 
 
 ```bash
-$ ibmcloud plugin list
+# ibmcloud plugin list
 Listing installed plug-ins...
 
-Plugin Name          Version   
-container-registry                     0.1.339   
-container-service/kubernetes-service   0.1.581    
+Plugin Name                            Version   Status   
+cloud-functions/wsk/functions/fn       1.0.36       
+cloud-object-storage                   1.1.2        
+container-registry                     0.1.454      
+container-service/kubernetes-service   0.4.90       
+dev                                    2.4.6        
 ```
 
 If there is no container-registry and container service, ask Your IBM staff.
 
+### 3. Check kubectl command
 
-### 3. Check kubectl 
+Kubectl is a kubernetes command line interface. Let's check if it works.
 
-type the following command :
+Type the following command :
 
 `kubectl version --short`
 
 And you should get version for your client (exact version may differ, it's OK) :
 
 ``` bash
-$ kubectl version --short
-Client Version: v1.9.8
-error: You must be logged in to the server (the server has asked for the client to provide credentials)
+# kubectl version --short
+Client Version: v1.15.10
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 
 The error at the end is **normal** because we need to specify how to connect to the master (see below).
 
-If You have logged previously, than You may not see that.
+
 
 
 ### 4. Gain access to the cluster
 
-Log into your IBM Cloud account if no already logged in.
+In the first lab You have created cluster in the IBM Cloud. Now it is the time to connect!
 
-`ibmcloud login -a https://api.eu-gb.bluemix.net`
+We need to:
 
+1. Login to IBM Cloud
 
-Enter ibmcloud target command  **with Your** **email name** (the same as You've used for IBM Cloud account creation):
+2. Target Your cluster
 
-`ibmcloud target -o <Your Email> -s dev`
+3. Get credentials for kubectl command to work.
 
-like:
+   
 
-`ibmcloud target -o kari@dmailpro.net -s dev`
+So - log into your IBM Cloud account, use the account data that You have created before:
 
-**IMPORTANT : At this point, your cluster should have been started. Check in the IBM Cloud Console.**
+`ibmcloud login -a cloud.ibm.com -r us-south -g Default`
 
-Then go to your Cluster Region :
+result:
 
-`ibmcloud cs region-set uk-south`
+```
+# ibmcloud login -a cloud.ibm.com -r us-south -g Default
+API endpoint: https://cloud.ibm.com
 
-Set the context for the cluster in your CLI.
+Email> kari@dmailpro.net
 
-`ibmcloud cs cluster-config mycluster`
+Password> 
+Authenticating...
+OK
+
+Targeted account Kiali Malli's Account (60b7082462f64beabb5dabae8a8b1b95)
+
+Targeted resource group Default
+
+Targeted region us-south
+
+                      
+API endpoint:      https://cloud.ibm.com   
+Region:            us-south   
+User:              kari@dmailpro.net   
+Account:           Kiali Malli's Account (60b7082462f64beabb5dabae8a8b1b95)   
+Resource group:    Default   
+CF API endpoint:      
+Org:                  
+Space:                
+
+Tip: If you are managing Cloud Foundry applications and services
+- Use 'ibmcloud target --cf' to target Cloud Foundry org/space interactively, or use 'ibmcloud target --cf-api ENDPOINT -o ORG -s SPACE' to target the org/space.
+- Use 'ibmcloud cf' if you want to run the Cloud Foundry CLI with current IBM Cloud CLI context.
+
+```
+
+Now we are logged in. Let's check if Your cluster is up and running:
+
+```
+ibmcloud ks cluster ls
+```
+
+the result should list the cluster as "**normal**":
+
+```
+oot@lnx101:~# ibmcloud ks cluster ls
+OK
+Name        ID                     State    Created          Workers   Location   Version        Resource Group Name   Provider   
+mycluster   bpcerkld0ftu1d64ppo0   normal   24 minutes ago   1         Dallas     1.15.10_1531   Default               classic   
+
+```
+
+Next thing is to select cluster in CLI using "ibmcloud ks" command and prepare the "kubectl" credentials.
+
+`ibmcloud ks cluster config mycluster`
 
 Output:
 
 ``` bash
-root@warsaw901:~# ibmcloud cs cluster-config mycluster
-WARNING: This legacy command is deprecated and will soon be unsupported. Use the 'ibmcloud ks cluster config' command instead.
-For more information, see http://ibm.biz/iks-cli-v1
-
+root@lnx101:~# ibmcloud ks cluster config mycluster
 WARNING: The behavior of this command in your current CLI version is deprecated, and becomes unsupported when CLI version 1.0 is released in March 2020. To use the new behavior now, set the 'IKS_BETA_VERSION' environment variable. In bash, run 'export IKS_BETA_VERSION=1'.
-Note: Changing the beta version can include other breaking changes. For more information, see http://ibm.biz/iks-cli-v1
+Note: Changing the beta version can include other breaking changes. For more information, see 'https://ibm.biz/iks-cli-v1'
 
 OK
 The configuration for mycluster was downloaded successfully.
@@ -173,9 +209,15 @@ Export environment variables to start using Kubernetes.
 export KUBECONFIG=/root/.bluemix/plugins/container-service/clusters/mycluster/kube-config-hou02-mycluster.yml
 ```
 
- > IMPORTANT : Set the KUBECONFIG environment variable. **Copy the output from the previous command and paste it in your terminal**. The command output should look similar to the following.
+ > **IMPORTANT** : Set the KUBECONFIG environment variable. **Copy the output from the previous command and paste it in your terminal**. The command output should look similar to the following.
 
- `export KUBECONFIG=/root/.bluemix/plugins/container-service/clusters/mycluster/kube-config-hou02-mycluster.yml`
+ 
+
+```
+export KUBECONFIG=/root/.bluemix/plugins/container-service/clusters/mycluster/kube-config-hou02-mycluster.yml
+```
+
+
 
  Verify that you can connect to your cluster by listing your worker nodes.
 
@@ -184,9 +226,9 @@ export KUBECONFIG=/root/.bluemix/plugins/container-service/clusters/mycluster/ku
  The output should be :
 
 ```con
-root@warsaw901:~# kubectl get nodes
+# kubectl get nodes
 NAME            STATUS   ROLES    AGE   VERSION
-10.76.165.189   Ready    <none>   46m   v1.14.7+IKS
+10.44.102.249   Ready    <none>   97s   v1.15.10+IKS
 ```
 
 **YOU ARE NOW CONNECTED TO YOUR CLUSTER** !
@@ -221,12 +263,12 @@ Now login to the IBM Cloud registry:
 Output:
 
 ```bash
-root@warsaw901:~# ibmcloud cr login 
-Logging in to 'registry.eu-gb.bluemix.net'...
-Logged in to 'registry.eu-gb.bluemix.net'.
+# ibmcloud cr login
+Logging in to 'registry.ng.bluemix.net'...
+Logged in to 'registry.ng.bluemix.net'.
 
-Logging in to 'uk.icr.io'...
-Logged in to 'uk.icr.io'.
+Logging in to 'us.icr.io'...
+Logged in to 'us.icr.io'.
 
 OK
 ```
@@ -235,21 +277,21 @@ OK
 
 To test our new **private registry**, do the following steps:
 
-1. get the hello-world image from Docker-Hub
+1. Get the hello-world image from Docker-Hub and put into Your server
 
 `docker pull hello-world`
 
-2. tag the hello-world image with a name containing your private registry name :
+2. Tag the hello-world image with a name containing your private registry name :
 
-`docker tag hello-world uk.icr.io/<my_namespace>/hello-world:latest`
+`docker tag hello-world us.icr.io/<my_namespace>/hello-world:latest`
 like:
-`docker tag hello-world uk.icr.io/maciej-1975-nowak/hello-world:latest`
+`docker tag hello-world us.icr.io/maciej-1975-nowak/hello-world:latest`
 
 3. push your image in the private registry
 
-`docker push uk.icr.io/<my_namespace>/hello-world:latest`
+`docker push us.icr.io/<my_namespace>/hello-world:latest`
 like:
-`docker push uk.icr.io/maciej-1975-nowak/hello-world:latest`
+`docker push us.icr.io/maciej-1975-nowak/hello-world:latest`
 
 4. List the images in the private registry
 
@@ -258,11 +300,13 @@ like:
 example:
 
 ```bash 
-root@warsaw901:~# ibmcloud cr image-list
+# ibmcloud cr image-list
 Listing images...
 
-Repository                                Tag      Digest         Namespace           Created        Size    Security status   
-uk.icr.io/maciej-1975-nowak/hello-world   latest   92c7f9c92844   maciej-1975-nowak   9 months ago   977 B   Unsupported OS   
+Repository                                Tag      Digest         Namespace           Created      Size    Security status   
+us.icr.io/maciej-1975-nowak/hello-world   latest   92c7f9c92844   maciej-1975-nowak   1 year ago   977 B   Unsupported OS   
+
+OK
 ```
 
 
@@ -274,26 +318,7 @@ uk.icr.io/maciej-1975-nowak/hello-world   latest   92c7f9c92844   maciej-1975-no
 
 
 
-### 1. Check connection to your cluster 
-
-Also test your connectivity to the cluster with this command:
-
- `kubectl get nodes`
-
-
-
-result:
-
-```aaaa
-root@warsaw901:~# kubectl get nodes
-NAME            STATUS   ROLES    AGE   VERSION
-10.76.165.189   Ready    <none>   54m   v1.14.7+IKS
-```
-
-If you get an error message like "error: You must be logged in to the server (Unauthorized)", then you must setup your KUBECONFIG (see a previous topic)
-​    
-
-### 2. Download a GIT repo for this exercise
+### 1. Download a GIT repo for this exercise
 
 **Create a directory** on your computer and move to that directory
 
@@ -326,7 +351,7 @@ Checking connectivity... done.
 
 
 
-### 3. Build a Docker image 
+### 2. Build a Docker image 
 
 Build the image locally and tag it with the name that you want to use on the  kubernetes cluster. The tag includes the namespace name of `<namespace>` in the cluster. The tag also targets the master node of the cluster, which manages the job of placing it on one or more worker nodes. This is because of the alias you created in the previous step, with the cluster name linked to the master node name. Tagging the image this way tells Docker where to push the image in a later step. Use **lowercase alphanumeric** characters or underscores only in the image name. Don't forget the period (.) at the end of the command. The period tells Docker to look inside the current directory for the Dockerfile and build artifacts to build the image.
 
@@ -334,43 +359,75 @@ Build the image locally and tag it with the name that you want to use on the  ku
 
 and than build the image:
 
-`docker build -t uk.icr.io/<your namespace>/hello1 .`
+`docker build -t us.icr.io/<your namespace>/hello1 .`
 
 like:
 
-`docker build -t uk.icr.io/maciej-1975-nowak/hello1 .`
+`docker build -t us.icr.io/maciej-1975-nowak/hello1 .`
 
 Output is:
 
 ```
-$docker build -t uk.icr.io/maciej-1975-nowak/hello1 .
+# docker build -t us.icr.io/maciej-1975-nowak/hello1 .
 Sending build context to Docker daemon  14.85kB
 Step 1/6 : FROM node:9.4.0-alpine
+9.4.0-alpine: Pulling from library/node
+605ce1bd3f31: Pull complete 
+fe58b30348fe: Pull complete 
+46ef8987ccbd: Pull complete 
+Digest: sha256:9cd67a00ed111285460a83847720132204185e9321ec35dacec0d8b9bf674adf
+Status: Downloaded newer image for node:9.4.0-alpine
  ---> b5f94997f35f
 Step 2/6 : COPY app.js .
- ---> Using cache
- ---> 79935ddaca75
+ ---> 3210b6d84b4e
 Step 3/6 : COPY package.json .
- ---> Using cache
- ---> 25178eb638f5
+ ---> c0e0f0bbfcc0
 Step 4/6 : RUN npm install &&    apk update &&    apk upgrade
- ---> Using cache
- ---> 3bfa8ca606de
-Step 5/6 : EXPOSE  8080
- ---> Using cache
- ---> 1a593e66c363
-Step 6/6 : CMD node app.js
- ---> Using cache
- ---> b022e60e6a4e
-Successfully built b022e60e6a4e
-Successfully tagged uk.icr.io/maciej-1975-nowak/hello1:latest
+ ---> Running in e2a783dea7b2
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN hello-world-demo@0.0.1 No repository field.
+npm WARN hello-world-demo@0.0.1 No license field.
 
+added 50 packages in 2.001s
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86_64/APKINDEX.tar.gz
+v3.6.5-44-gda55e27396 [http://dl-cdn.alpinelinux.org/alpine/v3.6/main]
+v3.6.5-34-gf0ba0b43d5 [http://dl-cdn.alpinelinux.org/alpine/v3.6/community]
+OK: 8448 distinct packages available
+Upgrading critical system libraries and apk-tools:
+(1/1) Upgrading apk-tools (2.7.5-r0 -> 2.7.6-r0)
+Executing busybox-1.26.2-r9.trigger
+Continuing the upgrade transaction with new apk-tools:
+(1/7) Upgrading musl (1.1.16-r14 -> 1.1.16-r15)
+(2/7) Upgrading busybox (1.26.2-r9 -> 1.26.2-r11)
+Executing busybox-1.26.2-r11.post-upgrade
+(3/7) Upgrading libressl2.5-libcrypto (2.5.5-r0 -> 2.5.5-r2)
+(4/7) Upgrading libressl2.5-libssl (2.5.5-r0 -> 2.5.5-r2)
+(5/7) Installing libressl2.5-libtls (2.5.5-r2)
+(6/7) Installing ssl_client (1.26.2-r11)
+(7/7) Upgrading musl-utils (1.1.16-r14 -> 1.1.16-r15)
+Executing busybox-1.26.2-r11.trigger
+OK: 5 MiB in 15 packages
+Removing intermediate container e2a783dea7b2
+ ---> 6a3d9066bfc5
+Step 5/6 : EXPOSE  8080
+ ---> Running in efa6808bcb0d
+Removing intermediate container efa6808bcb0d
+ ---> 3ea3ab5e6e58
+Step 6/6 : CMD node app.js
+ ---> Running in 13fd5de3ca28
+Removing intermediate container 13fd5de3ca28
+ ---> a6b30886ecf1
+Successfully built a6b30886ecf1
+Successfully tagged us.icr.io/maciej-1975-nowak/hello1:latest
 ```
+
+**The red warnings You may see are from npm tool during the build and are nor important for our exercise.**
 
 To see the image, use the following command:
 
 ```
-docker images uk.icr.io/<your_namespace>/hello1
+docker images us.icr.io/<your_namespace>/hello1
 ```
 
 
@@ -378,40 +435,41 @@ docker images uk.icr.io/<your_namespace>/hello1
 Example:
 
  ```
-$docker images uk.icr.io/maciej-1975-nowak/hello1
-REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
-uk.icr.io/maciej-1975-nowak/hello1   latest              b022e60e6a4e        24 minutes ago      76.1MB
+# docker images us.icr.io/maciej-1975-nowak/hello1
+REPOSITORY                           TAG                 IMAGE ID            CREATED              SIZE
+us.icr.io/maciej-1975-nowak/hello1   latest              a6b30886ecf1        About a minute ago   76.1MB
  ```
 
 ### 4. Push the image to the registry and authorise IKS to use the registry
 
 Push your image into the private registry :
 
-`docker push uk.icr.io/<Your Namespace>/hello1:latest`
+`docker push us.icr.io/<Your Namespace>/hello1:latest`
 
 like:
 
-`docker push uk.icr.io/maciej-1979-nowak/hello1:latest`
+`docker push us.icr.io/maciej-1975-nowak/hello1:latest`
 
  Your output should look like this.
 
 ```
-$docker push uk.icr.io/maciej-1975-nowak/hello1:latest
-The push refers to repository [uk.icr.io/maciej-1975-nowak/hello1]
-bf97ba0dc7d0: Pushed 
-5f00af5dbfb8: Layer already exists 
-ae36be318d10: Layer already exists 
-0804854a4553: Layer already exists 
-6bd4a62f5178: Layer already exists 
-9dfa40a0da3b: Layer already exists 
-latest: digest: sha256:b1740229e9b86efa538fb987a13d6e488501742c375e624c5deee4740e3ceef2 size: 1576
+# docker push us.icr.io/maciej-1975-nowak/hello1:latest
+The push refers to repository [us.icr.io/maciej-1975-nowak/hello1]
+2cce891a5ad1: Pushed 
+d8e24d055d0e: Pushed 
+c78bd3df24a6: Pushed 
+0804854a4553: Pushed 
+6bd4a62f5178: Pushed 
+9dfa40a0da3b: Pushed 
+latest: digest: sha256:562234b8c35962e89132d738ad8b229f1229d154ba766a83e20d6620e4f0e303 size: 1576
+
 ```
 
 > **IMPORTANT** : be sure that all the layers have been pushed, wait for the digest line at the end.
 
 
 
-IKS service needs a permission to connect to image rregistry. While it is usually provisioned properly, the accounts created in the past may have improper secrets set. We need to make sure they are OK...
+IKS service needs a permission to connect to image registry. While it is usually provisioned properly, the accounts created in the past may have improper secrets set. We need to make sure they are OK.
 
 Run following command to pull the secrets required for IKS to pull from the git
 
@@ -445,29 +503,32 @@ default-us-icr-io     kubernetes.io/dockerconfigjson        1      90m
 
 ### 5. Open the Kubernetes Console
 
-Go to your IBM Cloud Console and click on the IBM Cloud icon on the top left part of the screen, than pick  "Clusters":
+Go to your IBM Cloud Console and click on the IBM Cloud icon on the top left part of the screen, than pick  "Kubernetes":
 
-![image list](../images/IBMCloudDash.png)
+![image-20200228121749132](README.assets/image-20200228121749132.png)
 
 Pick "mycluster"
 
-![PickMycluster.png](../images/PickMycluster.png)
+![image-20200228121832864](README.assets/image-20200228121832864.png)
 
 You are presented with a view on the cluster You've created.
 
 
-![image list](../images/ClusterDet.png)
+![image-20200228121858815](README.assets/image-20200228121858815.png)
 
-> Now go to the Worker Nodes section (on the left pane) and **take a note** of the **public IP of that worker node** :
+> Now go to the Worker Nodes section (on the left pane) and **take a note** of the **public IP of that worker node**. You will need it later! :
 
 ![image list](../images/publicip.png)
 
 
-On the right part of the screen, **click the blue button** : Kubernetes Dashboard
 
-![deploy](../images/kdash.png)
+Kubernetes has it's own graphical UI. Let's get familiar with that.
 
-You can look around in the dashboard to see all the different resources (pods, nodes ...) or  the workloads (deployments, services ...).
+On the right part of the screen, **click the blue button** : Kubernetes Dashboard. You are presented with a screen like below (it may differ due to Kubernetes version)
+
+![image-20200228122113868](README.assets/image-20200228122113868.png)
+
+You may look around in the dashboard to see all the different resources (pods, nodes ...) or  the workloads (deployments, services ...).
 
 
 
@@ -475,19 +536,38 @@ You can look around in the dashboard to see all the different resources (pods, n
 
 Use your image to create a kubernetes deployment with the following command.
 
-`kubectl run hello1-deployment --image=uk.icr.io/<namespace>/hello1`
+`kubectl run hello1-deployment --image=us.icr.io/<namespace>/hello1`
 
 Output is :
 
 ```
-$ kubectl run hello1-deployment --image=uk.icr.io/maciej-1975-nowak/hello1
-kubectl run --generator=deployment/apps.v1beta1 is DEPRECATED and will be removed in a future version. Use kubectl create instead.
+# kubectl run hello1-deployment --image=us.icr.io/maciej-1975-nowak/hello1
+kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.
 deployment.apps/hello1-deployment created
 
 ```
-You can also look at the Kubernetes dashboard to see the deployment:
 
-![expose service](../images/deployk.png)
+You may check if the pods have been created and works:
+
+```
+# kubectl get pods
+```
+
+Proper answer would be:
+
+```
+# kubectl get pods
+NAME                                 READY   STATUS    RESTARTS   AGE
+hello1-deployment-555585fcd9-4hktn   1/1     Running   0          110s
+```
+
+If the pod is not in "Running" state You have to verify what has happened. Just ask Your IBM staff for help!
+
+You can also look at the Kubernetes GUI dashboard to see the deployment and pods:
+
+![image-20200228122309413](README.assets/image-20200228122309413.png)
+
+
 
 ### 7. Create a service 
 
@@ -505,67 +585,117 @@ service "hello1-service" exposed
 
 And you can also go to the dashboard :
 
-![expose service](../images/servicek.png)
+![image-20200228122749857](README.assets/image-20200228122749857.png)
 
 
-### 8. NodePort type
+### 8. What is a NodePort service type
 
 With the NodePort type of service, the kubernetes cluster creates a 5-digit port number to access the running container through the service. 
 
-The service is accessed through the IP address of the proxy node with the NodePort port number. To discover the NodePort number that has been assigned, use the following command.
+The service is accessed through the IP address of the node with the NodePort port number. To discover the NodePort number that has been assigned, use the following command.
 
 `kubectl describe service hello1-service`
 
  Your output should look like this.
 
 ```
-$ kubectl describe service hello1-service
+# kubectl describe service hello1-service
 Name:                     hello1-service
 Namespace:                default
 Labels:                   run=hello1-deployment
 Annotations:              <none>
 Selector:                 run=hello1-deployment
 Type:                     NodePort
-IP:                       172.21.219.48
+IP:                       172.21.23.200
 Port:                     <unset>  8080/TCP
 TargetPort:               8080/TCP
-NodePort:                 <unset>  32509/TCP
-Endpoints:                172.30.192.135:8080
+NodePort:                 <unset>  30933/TCP
+Endpoints:                172.30.33.199:8080
 Session Affinity:         None
 External Traffic Policy:  Cluster
 Events:                   <none>
+
 ```
 
 Or look at the dashboard:
 
-![Describe](../images/describek.png)
+![image-20200228123706499](README.assets/image-20200228123706499.png)
 
  
 
 
-### 9. NodePort number 
+### 9. Let's verify if it works!
 
-Your port may be different! Check it before!
+In order to connect to the service created You will need to have two informations:
 
-Open a Firefox browser window or tab and go to the URL of your Kubernetes node (You should have noted it before) with your NodePort number, such as `http://159.122.181.117:32509`. Your output should look like this.
+1. IP address of the node (not the internal Cluster IP address!)
+2. External port that the service runs on
 
-![Helloworld](../images/browser1.png)
 
-In case You've not noted the public IP it may be acquired via command line using kubectl command:
 
-`kubectl get nodes -o wide`
+**Both informations have been collected in previous exercises!**
 
-output:
+If You haven't noted that - for **IP Address**  use :
+
+```kubectl get nodes -o wide```
 
 ```
-root@warsaw9101:~/started/container-service-getting-started-wt/Lab 1# kubectl get nodes -o wide
-
-NAME      STATUS  ROLES  AGE  VERSION    INTERNAL-IP   EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION   CONTAINER-RUNTIME
-
-10.76.199.223  Ready  <none>  24m  v1.14.9+IKS  10.76.199.223  184.172.234.24  Ubuntu 16.04.6 LTS  4.4.0-169-generic  containerd://1.2.10
+# kubectl get nodes -o wide
+NAME            STATUS   ROLES    AGE   VERSION        INTERNAL-IP     EXTERNAL-IP       OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+10.44.102.249   Ready    <none>   29m   v1.15.10+IKS   10.44.102.249   184.172.252.163   Ubuntu 16.04.6 LTS   4.4.0-173-generic   containerd://1.2.12
 ```
 
-In the example above the public IP is 184.172.234.24
+In the example above proper IP is 184.172.252.163
+
+And for the **port number** use:
+
+```
+kubectl describe service hello1-service
+```
+
+
+
+```
+#kubectl describe service hello1-service
+Name:                     hello1-service
+Namespace:                default
+Labels:                   run=hello1-deployment
+Annotations:              <none>
+Selector:                 run=hello1-deployment
+Type:                     NodePort
+IP:                       172.21.23.200
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  30933/TCP
+Endpoints:                172.30.33.199:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
+```
+
+In the example above proper port number is 30933
+
+
+
+Now let's verify our app.
+
+There are two methods: command line or browser from Your laptop.
+
+Using CLI:
+
+```
+curl http://184.172.252.163:30933
+```
+
+```
+# curl http://184.172.252.163:30933
+Hello world from hello1-deployment-555585fcd9-4hktn! Your app is up and running in a cluster!
+```
+
+Using browser:
+
+![image-20200228123604051](README.assets/image-20200228123604051.png)
 
 ### 10. Application troubleshooting 
 
@@ -670,7 +800,18 @@ To do so, use the following commands :
 
 To do so, use the following commands :
 
-`kubectl run hello1-deployment --image=uk.icr.io/<namespace>/hello1`
+`kubectl run hello1-deployment --image=us.icr.io/<Your namespace>/hello1`
+
+output:
+
+```
+#kubectl run hello1-deployment --image=us.icr.io/maciej-1975-nowak/hello1
+kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.
+deployment.apps/hello1-deployment created
+
+```
+
+
 
 ### 3. Scale the application
 
@@ -693,7 +834,7 @@ To see your changes being rolled out, you can run:
 
 `kubectl rollout status deployment/hello1-deployment`
 
-The rollout might occur so quickly that the following messages might not display:
+**The rollout might occur so quickly that the progress messages might not display:**
 
 ```bash
 $ kubectl rollout status deployment/hello1-deployment
@@ -747,24 +888,75 @@ If you are in "Lab 1" directory, you need to go to "Lab 2" directory:
 
 Build a new version (2) of that application: 
 
-`docker build -t uk.icr.io/<namespace>/hello1:2 .`
+`docker build -t us.icr.io/<namespace>/hello1:2 .`
+
+output:
+
+```
+# docker build -t us.icr.io/maciej-1975-nowak/hello1:2 .
+Sending build context to Docker daemon  19.97kB
+Step 1/6 : FROM node:9.4.0-alpine
+ ---> b5f94997f35f
+Step 2/6 : COPY app.js .
+ ---> bf5ca5300f16
+Step 3/6 : COPY package.json .
+ ---> 66b20c2d0dae
+Step 4/6 : RUN npm install &&    apk update &&    apk upgrade
+ ---> Running in 31fb05f2bdc4
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN hello-world-armada@0.0.1 No repository field.
+npm WARN hello-world-armada@0.0.1 No license field.
+
+added 50 packages in 1.985s
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/main/x86_64/APKINDEX.tar.gz
+fetch http://dl-cdn.alpinelinux.org/alpine/v3.6/community/x86_64/APKINDEX.tar.gz
+v3.6.5-44-gda55e27396 [http://dl-cdn.alpinelinux.org/alpine/v3.6/main]
+v3.6.5-34-gf0ba0b43d5 [http://dl-cdn.alpinelinux.org/alpine/v3.6/community]
+OK: 8448 distinct packages available
+Upgrading critical system libraries and apk-tools:
+(1/1) Upgrading apk-tools (2.7.5-r0 -> 2.7.6-r0)
+Executing busybox-1.26.2-r9.trigger
+Continuing the upgrade transaction with new apk-tools:
+(1/7) Upgrading musl (1.1.16-r14 -> 1.1.16-r15)
+(2/7) Upgrading busybox (1.26.2-r9 -> 1.26.2-r11)
+Executing busybox-1.26.2-r11.post-upgrade
+(3/7) Upgrading libressl2.5-libcrypto (2.5.5-r0 -> 2.5.5-r2)
+(4/7) Upgrading libressl2.5-libssl (2.5.5-r0 -> 2.5.5-r2)
+(5/7) Installing libressl2.5-libtls (2.5.5-r2)
+(6/7) Installing ssl_client (1.26.2-r11)
+(7/7) Upgrading musl-utils (1.1.16-r14 -> 1.1.16-r15)
+Executing busybox-1.26.2-r11.trigger
+OK: 5 MiB in 15 packages
+Removing intermediate container 31fb05f2bdc4
+ ---> 2a829a9673ef
+Step 5/6 : EXPOSE  8080
+ ---> Running in 37a7839d09a1
+Removing intermediate container 37a7839d09a1
+ ---> 0e87eed95c39
+Step 6/6 : CMD node app.js
+ ---> Running in 86af0d770205
+Removing intermediate container 86af0d770205
+ ---> fcce557a5f2a
+Successfully built fcce557a5f2a
+Successfully tagged us.icr.io/maciej-1975-nowak/hello1:2
+```
 
 Then push the new version into the registry:
 
-`docker push uk.icr.io/<namespace>/hello1:2`
+`docker push us.icr.io/<namespace>/hello1:2`
 
 example output:
 
 ```
-$ docker push uk.icr.io/maciej-1975-nowak/hello1:2
-The push refers to repository [uk.icr.io/maciej-1975-nowak/hello1]
-4e45a1180b5a: Pushed 
-7bc02a5513a6: Pushed 
-ea7615adcaaa: Pushed 
+# docker push us.icr.io/maciej-1975-nowak/hello1:2
+The push refers to repository [us.icr.io/maciej-1975-nowak/hello1]
+ca8c90c2d252: Pushed 
+17d71139da06: Pushed 
+51b259b33eea: Pushed 
 0804854a4553: Layer already exists 
 6bd4a62f5178: Layer already exists 
 9dfa40a0da3b: Layer already exists 
-2: digest: sha256:37ee02cd782beca59372dd1add486ab4a648a4459ee3bdb029aefad5bb6ddf48 size: 1576
+2: digest: sha256:2bd1318a2206541c5918585416c75d2173e945dec8b1ced73b395100b10e3ca3 size: 1576
 ```
 
 
@@ -772,7 +964,7 @@ ea7615adcaaa: Pushed
 Using kubectl, you can now update your deployment to use the latest image. kubectl allows you to change details about existing resources with the set subcommand. We can use it to change the image being used.
 
 ```
-kubectl set image deployment/hello1-deployment hello1-deployment=uk.icr.io/maciej-1975-nowak/hello1:2
+kubectl set image deployment/hello1-deployment hello1-deployment=us.icr.io/<Your repository name>/hello1:2
 ```
 
 
@@ -780,8 +972,9 @@ kubectl set image deployment/hello1-deployment hello1-deployment=uk.icr.io/macie
 example output:
 
 ```
-$ kubectl set image deployment/hello1-deployment hello1-deployment=uk.icr.io/maciej-1975-nowak/hello1:2
+# kubectl set image deployment/hello1-deployment hello1-deployment=us.icr.io/maciej-1975-nowak/hello1:2
 deployment.extensions/hello1-deployment image updated
+
 ```
 
 
@@ -829,6 +1022,32 @@ Waiting for rollout to finish: 9 of 10 updated replicas are available...
 deployment "hello1" successfully rolled out
 ```
 
+You may observe the pods being killed and re-created with
+
+``` kubectl get pods```
+
+```
+# kubectl get pods
+NAME                                 READY   STATUS        RESTARTS   AGE
+hello1-deployment-555585fcd9-8wx6n   0/1     Terminating   0          8m3s
+hello1-deployment-555585fcd9-9v5dk   0/1     Terminating   0          8m47s
+hello1-deployment-555585fcd9-pbrc9   0/1     Terminating   0          8m3s
+hello1-deployment-555585fcd9-rxw2l   0/1     Terminating   0          8m3s
+hello1-deployment-555585fcd9-sf8dz   0/1     Terminating   0          8m3s
+hello1-deployment-555585fcd9-sjhqc   0/1     Terminating   0          8m3s
+hello1-deployment-555585fcd9-xkh6r   0/1     Terminating   0          8m3s
+hello1-deployment-768cfb6545-47v4n   1/1     Running       0          38s
+hello1-deployment-768cfb6545-4f2vq   1/1     Running       0          40s
+hello1-deployment-768cfb6545-5p798   1/1     Running       0          43s
+hello1-deployment-768cfb6545-6tr2v   1/1     Running       0          43s
+hello1-deployment-768cfb6545-b676j   1/1     Running       0          39s
+hello1-deployment-768cfb6545-dfkk5   1/1     Running       0          38s
+hello1-deployment-768cfb6545-hbsf8   1/1     Running       0          38s
+hello1-deployment-768cfb6545-v9szm   1/1     Running       0          43s
+hello1-deployment-768cfb6545-vbjfh   1/1     Running       0          43s
+hello1-deployment-768cfb6545-zdcjq   1/1     Running       0          43s
+```
+
 Finally, use that command to see the result:
 `kubectl get replicasets`
 
@@ -855,11 +1074,9 @@ hello1-service   NodePort   172.21.51.42   <none>        8080:31952/TCP   56s
 
 
 
-Collect the NodePort and test your new code :
+Collect the NodePort and test your new code with curl or firefox :
 
 ![New Application up and running](./../images/NewApp.png)
-
-
 
 # Conclusion
 

@@ -1,7 +1,7 @@
 
 # IBM Cloud Container Workshop
 ---
-# Preparing the labs
+# Lab1: Preparing the environment
 ---
 
 ![image-20181018184328603](../images/image-20181018184328603.png)
@@ -117,20 +117,17 @@ Go back to the **Catalog** and check that now you have access to **Containers in
 
 # Task 7.  Login to IBM Cloud
 
-For these labs, we have decided to login to the **London Data Center** (api.eu-gb.bluemix.net). 
+For these labs, we have decided to login to the IBM Cloud - so let's check if Your account works.
 
 Login to IBM Cloud with the ibmcloud command :
 
- `ibmcloud login -a api.eu-gb.bluemix.net`
+ ``ibmcloud login -a cloud.ibm.com -r us-south -g Default``
 
  And answer a few questions: email, password :
 
 ```console
-root@warsaw901:~# ibmcloud login -a api.eu-gb.bluemix.net
-API endpoint https://api.eu-gb.bluemix.net is going to be deprecated. Use https://cloud.ibm.com.
-
+# ibmcloud login -a cloud.ibm.com -r us-south -g Default
 API endpoint: https://cloud.ibm.com
-Region: eu-gb
 
 Email> kari@dmailpro.net
 
@@ -140,12 +137,16 @@ OK
 
 Targeted account Kiali Malli's Account (60b7082462f64beabb5dabae8a8b1b95)
 
+Targeted resource group Default
+
+Targeted region us-south
+
                       
 API endpoint:      https://cloud.ibm.com   
-Region:            eu-gb   
+Region:            us-south   
 User:              kari@dmailpro.net   
 Account:           Kiali Malli's Account (60b7082462f64beabb5dabae8a8b1b95)   
-Resource group:    No resource group targeted, use 'ibmcloud target -g RESOURCE_GROUP'   
+Resource group:    Default   
 CF API endpoint:      
 Org:                  
 Space:                
@@ -153,46 +154,9 @@ Space:
 Tip: If you are managing Cloud Foundry applications and services
 - Use 'ibmcloud target --cf' to target Cloud Foundry org/space interactively, or use 'ibmcloud target --cf-api ENDPOINT -o ORG -s SPACE' to target the org/space.
 - Use 'ibmcloud cf' if you want to run the Cloud Foundry CLI with current IBM Cloud CLI context.
-
-
 ```
 
 
-
-Enter ibmcloud target command  **with Your** **email name** (the same as You've used for IBM Cloud account creation):
-
-
-
-`ibmcloud target -o <Your Email> -s dev`
-
-like:
-
-`ibmcloud target -o kari@dmailpro.net -s dev`
-
-
-
-Results:
-
- ```console 
-root@warsaw901:~# ibmcloud target -o kari@dmailpro.net -s dev
-Targeted Cloud Foundry (https://api.eu-gb.cf.cloud.ibm.com)
-
-Targeted org kari@dmailpro.net
-
-Targeted space dev
-
-
-                      
-API endpoint:      https://cloud.ibm.com   
-Region:            eu-gb   
-User:              kari@dmailpro.net   
-Account:           Kiali Malli's Account (60b7082462f64beabb5dabae8a8b1b95)   
-Resource group:    No resource group targeted, use 'ibmcloud target -g RESOURCE_GROUP'   
-CF API endpoint:   https://api.eu-gb.cf.cloud.ibm.com (API version: 2.141.0)   
-Org:               kari@dmailpro.net   
-Space:             dev  
-
- ```
 
 # Task 8 : Create your first Kubernetes cluster
 
