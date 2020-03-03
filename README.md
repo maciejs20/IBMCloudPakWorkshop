@@ -25,12 +25,12 @@ __We do not distribute presentations used during the workshop.__
   + Kubernetes on IKS  (**Lab**): [3-KubernetesLabOnIKS/README.md](3-KubernetesLabOnIKS/README.md)
 + Openshift overview (**presentation**)
 	+ Openshift Starter part 1(**Lab**):  [8-Openshift/0-First-Steps-Lab.md](8-Openshift/0-First-Steps-Lab.md)
-	+ + Openshift Starter part 2(**Lab**):  [8-Openshift/1-OpenShift-Lab.md](8-Openshift/1-OpenShift-Lab.md)
+	+ Openshift Starter part 2(**Lab**):  [8-Openshift/1-OpenShift-Lab.md](8-Openshift/1-OpenShift-Lab.md)
 + Wrap Up
 
 **Day Two**
-+ Openshift overview
-	+ Openshift part 2(**Lab**):  [https://github.com/maciejs20/openshift-labs/blob/master/Lab2/Openshift-S2I-v2.pdf](https://github.com/maciejs20/openshift-labs/blob/master/Lab2/Openshift-S2I-v2.pdf)
++ Openshift overview (continue)
+	+ Openshift S2I (**Lab**):  [9-Openshift/Openshift-S2I-v2.pdf](9-Openshift/Openshift-S2I-v2.pdf)
 + IBM Cloud Pak for Applications overview (**presentation**)
 + IBM Cloud Pak for Multicloud overview (**presentation**)
   + Multicloud application patterns (**Demo**)

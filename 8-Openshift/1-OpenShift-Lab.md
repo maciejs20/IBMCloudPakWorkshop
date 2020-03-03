@@ -1,12 +1,22 @@
-# OpenShift Console & CLI Labs
+# IBM Cloud Container Workshop
+
+###### *Version: 2020-03-03*
+
+---
+
+# Lab5: OpenShift First Steps: CLI
+
+---
+
+![image-20181018184328603](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/8-Openshift/1-OpenShift-Lab.assets/image-20181018184328603.png)
+
+
 
 
 
 ![image-20191012152122962](images/image-20191012152122962-0886483.png)
 
 
-
-Duration : 30 minutes
 
 This lab is based on efforts of Philippe Thomas, IBM available at https://github.com/phthom/cp4a, tailored to our local needs.
 
@@ -18,27 +28,19 @@ Be sure that you have your **labuser**xx userID with xx representing a number fr
 
 Don't use someone else userID except if the instructor ask you to do so. 
 
-> So you should have for example : **labuser01** and a password (given by the instructor at the time of the lab).
 
 
 
-## Task #1 - Connect to your OpenShift Cluster
 
-You must be connected to your Web UI console - use Your browser with the link:
+## 1 - Connect to your OpenShift Cluster
 
-```http
-https://master.x.cloudpak.site:8443
-```
+Connect to the lab27 server provided by IBM using server name, port number, username and password. 
+
+``ssh -p <PORT> root@<Your IP Address:port``
+
+or use any other SSH client (like putty)
 
 
-
-We don't want to install anything on Your local machine, that's why we will use another Linux server with pre-confiured tools for all command-line related activities.
-
-Login to the server `master.x.cloudpak.site` using ssh on port 22 with Your username (labuserXX) and password provided by IBM staff. Use any SSH client You have. 
-
-If there is no SSH client on Your workstation, just install putty.
-
-`slogin -l labuserXX master.x.cloudpak.site`
 
 Be sure you also have opened a terminal or a commande line window and that you are connected:
 
@@ -46,7 +48,7 @@ Be sure you also have opened a terminal or a commande line window and that you a
 oc login https://master.x.cloudpak.site:8443
 ```
 
-Then enter your credentials (userID and password). 
+Then enter your Openshift Cluster Account credentials (userID and password). 
 
 Be sure you are working on your **project** by typing the following command:
 
@@ -56,7 +58,7 @@ oc status
 
 
 
-## Task #2 - Starting a basic application
+## 2 - Starting a basic application
 
 For this exercise, we will use the CLI and then the OpenShift web console.
 
@@ -220,20 +222,26 @@ The other pod is still running (1/1) and this is our Node.JS application.
 
 To make this application visible to the world, you should create a **route**. If you are familiar with Kubernetes, a route is very close concept of an ingress with the association of a DNS. 
 
-Expose a route to the service:
+In order to access the service from outside, we have to expose a route to the service:
 
 ```
 oc expose svc/nodejs-ex
 ```
 
-Results:
+Result:
 
 ```bash
 # oc expose svc/nodejs-ex
 route.route.openshift.io/nodejs-ex exposed
 ```
 
-But you don't know the route url yet. 
+But you don't know the route url yet - so let's check it with 
+
+```
+oc get route
+```
+
+ result:
 
 ```
 [labuser01@master ~]$ oc get route
@@ -256,7 +264,7 @@ You can notice the following :
 
 
 
-Get access to this new application :
+Copy the url and get access to this new application inside Your VNC client :
 
 Example:
 
@@ -266,9 +274,9 @@ Example:
 
 
 
-## Task #4 - OpenShift Web Console
+## 3 - OpenShift Web Console
 
-Goto the OpenShift Web Console (use your credentials if necessary)
+Get back to Your VNC client and go to the OpenShift Web Console (use your credentials if necessary)
 
 ![image-20191012141202613](images/image-20191012141202613-0882322.png)
 
@@ -295,10 +303,6 @@ This will show the new created application:
 > The name of your application, the number of pod, the application URL link ...
 
 
-
-To get access to the application, click on the route:
-
-![1-OpenShift-Lab.assets/image-20200107095737588.png](1-OpenShift-Lab.assets/image-20200107095737588.png)
 
 Click on the `nodejs-ex, #1` blue link, then you will see some more details on the application: 
 
@@ -370,7 +374,7 @@ Open Your route (**nodejs-ex**), than click on "**Actions**" -> "**Edit Yaml**" 
 
  Click "**Cancel**"
 
-## Task #5 - Monitoring your application
+## 4 - Monitoring your application
 
 To learn about monitoring of your application, on the left pane, click on the `Monitoring`icon:
 
@@ -422,7 +426,7 @@ A new pod is automatically started !!! Because the number of replicaset has been
 
 ![image-20191012153424224](images/image-20191012153424224-0887264.png)
 
-### Task #6 - Clean the application
+## 5 - Clean the application
 
 Clean the system - delete the application created.
 
