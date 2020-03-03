@@ -24,7 +24,8 @@ __We do not distribute presentations used during the workshop.__
 + IBM Cloud (Public) Container Service (**presentation**)
   + Kubernetes on IKS  (**Lab**): [3-KubernetesLabOnIKS/README.md](3-KubernetesLabOnIKS/README.md)
 + Openshift overview (**presentation**)
-	+ Openshift part 1(**Lab**):  [https://github.com/maciejs20/openshift-labs/blob/master/Lab1/1-OpenShift-Lab.md](https://github.com/maciejs20/openshift-labs/blob/master/Lab1/1-OpenShift-Lab.md)
+	+ Openshift Starter part 1(**Lab**):  [8-Openshift/0-OpenShift-Lab.md](8-Openshift/0-OpenShift-Lab.md)
+	+ + Openshift Starter part 2(**Lab**):  [8-Openshift/1-OpenShift-Lab.md](8-Openshift/1-OpenShift-Lab.md)
 + Wrap Up
 
 **Day Two**
