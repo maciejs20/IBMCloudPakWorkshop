@@ -1,4 +1,12 @@
-# OpenShift First Steps Labs
+# IBM Cloud Container Workshop
+
+###### Version: 2020-03-03
+
+---
+
+## Lab 4: OpenShift First Steps Lab
+
+
 
 
 
@@ -6,11 +14,9 @@
 
 
 
-Duration: 30 minutes
 
 
-
-This lab is based on efforts of Philippe Thomas, IBM available at https://github.com/phthom/cp4a, tailored to our local needs.
+This lab is partialy based on efforts of Philippe Thomas, IBM available at https://github.com/phthom/cp4a, tailored to our local needs.
 
 
 
@@ -30,28 +36,53 @@ As you can see on the picture, you will connect to the OpenShift Cluster Web UI 
 
 
 
-## Task #1 - Modifying your environment
+## 1 - Modifying your environment
 
 The instructor will give you some informations:
 
 - a user ID and password to connect to the Master Node. The user ID is in the format **labuser<xx>** where xx is a number from 00 to 99. Don't use someone else userID except if the instructor ask you to do so. 
+
 - a project name in the format **labproj<xx>**. Each project is associated to the corresponding labuser<xx>. 
 
+  
+
+## 2 - Connecting to the server
+
+We have desktop service provisioned on the lab server, accesible via VNC. 
+
+If You don't have vnc client, get it from https://www.realvnc.com/en/connect/download/viewer/ or any other source.
+
+Use the vnc client and connect to the lab27 server. Please double check the port number that this service runs!
+
+![image-20200303103548919](0-First-Steps-Lab.assets/image-20200303103548919.png)
 
 
-## Task #2 - Connecting to the Web Console
 
-You can now use the following link in your preferred browser :
+## 3 - Connecting to the Web Console
+
+Select Applications->Internet and open firefox browser
+
+![image-20200303103637780](0-First-Steps-Lab.assets/image-20200303103637780.png)
+
+You can now use the following link :
 
 ```http
 https://master.x.cloudpak.site:8443
 ```
 
-Please take a note of this link because we will use it very often.
+Please take a note of this link because we will use it very often. 
 
-You should see the following page after a few seconds:
+**This server is accesible ONLY via the VNC session, so do not try to open it from Your local web browser!**
 
 
+
+Our server is using self-signed certificate, which may be identified by the browser as security risk.
+
+Accept any security risk You may encounter (Advanced->Accept Risk and continue).
+
+
+
+You are presented with Openshift login page.
 
 ![image-20191008154755641](images/image-20191008154755641-0542475.png)
 
@@ -65,21 +96,15 @@ Type your credentials (**user ID, password**) and click **Log in**
 
 
 
-> Be very careful when you type the line especially on the IP address and the hostnames. 
->
->
-
-## Task #2 - Connecting via command line
+## 4 - Connecting via command line
 
 ### 1. Login to the server
 
-We don't want to install anything on Your local machine, that's why we will use another Linux server with pre-confiured tools.
+We don't want to install anything on Your local machine, that's why we will use another Linux server with pre-confiured tools. Connect to the lab27 server provided by IBM using server name, port number, username and password. 
 
-Login to the server `master.x.cloudpak.site` using ssh on port 22 with Your username (labuserXX) and password provided by IBM staff. Use any SSH client You have. 
+``ssh -p <PORT> root@<Your IP Address:port``
 
-If there is no SSH client on Your workstation, just install putty.
-
-`slogin -l labuserXX master.x.cloudpak.site`
+or use any other SSH client (like putty)
 
 
 
@@ -107,9 +132,7 @@ Welcome! See 'oc help' to get started.
 [labuser01@master ~]$ 
 ```
 
-> **You don't need to create a new project because a new secure project space has already been created for you.** 
 
-If you had to create a new project, you would have typed : oc new-project labproj<xx> where **xx** is your number.
 
 To understand what project you are using:
 
@@ -136,7 +159,7 @@ Now you are ready to go thru the exercises.
 
 
 
-## Task #3 - Deploy some code
+## 5 - Deploy some code
 
 Now go back to the Web UI and deploy your first application.
 
@@ -148,7 +171,7 @@ From the **catalog console**, find the **Node.js** tile.
 
 
 
-Select **Node.js** entry:
+Select **Node.js** BUILDER NODEJS entry:
 
 ![image-20191125171051939](images/image-20191125171051939-4698251.png)
 
@@ -156,9 +179,9 @@ You can have a look to the github **sample** repository.
 
 Click **next**.
 
-![image-20191125171440526](images/image-20191125171440526-4698480.png)
+![image-20200303110644794](0-First-Steps-Lab.assets/image-20200303110644794.png)
 
-Replace xx with your own number:
+Replace labprojxx/labappxx with your own number as given on the cluster login page.
 
 - labproj<xx> in the add to project field
 
@@ -176,45 +199,45 @@ Click "**Create**"
 
 Click **close**.
 
-Go back to the Catalog Console and click on **view all** to select your project **labproj<xx>**.
+Expand "**Service Catalog**" item in the upper part of the screen and select "**Application Console**".
 
-![image-20191125172105692](images/image-20191125172105692-4698865.png)
+Click on Your project to open it, than select "**Overview**" from the left menu and click on ">" to see deployment details:
 
-As an example in the **application console**, you should see you application deployment **labapp<xx>**:
 
-![image-20191125172145274](images/image-20191125172145274-4698905.png)
 
-If you drill down, at some point you should see your pod running. It may take a minute or two for the system to build the app:
+![image-20200303111911788](0-First-Steps-Lab.assets/image-20200303111911788.png)
 
-![image-20191125172400837](images/image-20191125172400837-4699040.png)
+At some point, when the build finishes you should see build finishes and app running. It may take a up to 2-3 minutes for the system to build the app, depending on current load on the cluster and the network:
 
-To get access to your application, you have to find the route: go to **Application** on the left pane and the choose **Route**:
+![image-20200303113353579](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/8-Openshift/0-First-Steps-Lab.assets/image-20200303113353579.png)
 
-![image-20191125172539655](images/image-20191125172539655-4699139.png)
+To get access to your application click on the **"Routes - External Traffic"**  or manually find the route: go to **Application** on the left pane and the choose **Route**:
+
+![image-20200303113506075](0-First-Steps-Lab.assets/image-20200303113506075.png)
 
 Click on the hostname link and voilà ! You get access to your application.
 
 ![image-20191125172633256](images/image-20191125172633256-4699193.png)
 
-### Task #3 - Clean the application
+## 6 - Clean the application
 
 Clean the system - delete the application created.
 
-The system has created a few comonents. As our resources are limited, before we will start fith further labs we need to delete the application created.
+The system has created a few comonents. As our resources are limited, before we will start with further labs we need to delete the application created. **Do not skip this step!**
 
-### 1. Clean the deployment
+#### 1. Clean the deployment
 
 Select "**Applications**" -> "**Deployments**" from the web console menu on the left.
 
 Click on the application that You have created:
 
-![image-20200107094722691](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/openshift/Lab1a/0-First-Steps-Lab.assets/image-20200107094722691.png)
+![image-20200303113628520](0-First-Steps-Lab.assets/image-20200303113628520.png)
 
 
 
 From the **"Actions"** select "**Delete**". Confirm with "**Delete**" again.
 
-## Conclusion
+## 7. Conclusion
 
 **Congrats !**  You successfully installed and used the oc CLI and the OpenShift web console thru the installation of a typical Node.JS application (from Github). 
 
@@ -235,5 +258,3 @@ You noticed the following details:
 # End of Lab
 
 
-
-X

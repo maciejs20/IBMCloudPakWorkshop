@@ -1,5 +1,6 @@
 
 # IBM Cloud Container Workshop
+###### *Version: 2020-03-03*
 ---
 # Lab1: Preparing the environment
 ---
@@ -24,8 +25,8 @@ So before you can start any labs, you should have satisfied the following prereq
 **If you already have a IBM id, jump to task 2.**
 
 > If you don't have a valid email address or you don't want to use your personal or professional email address, then you can use https://temp-mail.org/en/
-
-This web site will give you a temporary email address for 10 minutes :
+>
+> This web site will give you a temporary email address for 10 minutes :
 
 ![image-20190118103132743](../images/image-20190118103132743-7803892.png)
 
@@ -85,14 +86,16 @@ You are now connected (and registred) to the IBM Cloud.
 
 # Task 2. Apply a promo code 
 
-Go to **Manage >Account > Account Settings** and press enter.
+Go to **Manage >Account > Account Settings**.
 
 
 ![image-20190118112618467](../images/image-20190118112618467-7807178.png)
 
 You should get the following section in the **account setting page**  :
 
-![image-20190118112743476](../images/promocode-enter.png)
+![image-20200303095737887](README.assets/image-20200303095737887.png)
+
+
 
 Click **Apply Code** button.
 
@@ -118,6 +121,27 @@ Go back to the **Catalog** and check that now you have access to **Containers in
 # Task 7.  Login to IBM Cloud
 
 For these labs, we have decided to login to the IBM Cloud - so let's check if Your account works.
+
+Connect to the lab27 server provided by IBM using server name, port number, username and password. 
+
+![image-20200303100020419](README.assets/image-20200303100020419.png)
+
+
+
+Observe cluster availability, in case of any problems inform IBM team:
+
+```
+Last login: Tue Mar  3 09:01:13 2020 from 192.168.2.1
+lnx15
+ 
+-------------
+Witaj na serwerze laboratoryjnym dla ćwiczeń z IBM Cloud Pak!
+     
+Dostępność klastra OpenShift: OK
+Dostępność łącza zewnętrznego: OK
+```
+
+
 
 Login to IBM Cloud with the ibmcloud command :
 

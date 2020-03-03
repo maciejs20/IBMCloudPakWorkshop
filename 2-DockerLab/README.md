@@ -1,5 +1,7 @@
-
 # IBM Cloud Container Workshop
+
+###### version: 2020-03-03
+
 ---
 # Lab 2: Let's get familiar with Docker
 ---
@@ -21,11 +23,13 @@
 
 
 
-Login to Your provisioned server. Use Your IP address, as reveived from IBM staff.
+Connect to the lab27 server provided by IBM using server name, port number, username and password. 
 
-``ssh root@<Your IP Address:port``
+``ssh -p <PORT> root@<Your IP Address:port``
 
-Launch a shell or a command line and confirm that docker is installed.
+or use any other SSH client (like putty)
+
+Confirm that docker is installed.
 
 `docker version`
 
@@ -519,7 +523,7 @@ Notice that all the layers in the image have been gone.
   >
   >However be carefull with that command that will remove all containers.
 
-
+### 17. Clean the environment. 
 
 **Check what You have learnt: Try to stop the couchdb:3.0.0 container that runs on Your host and remove it's image by Yourself!**
 

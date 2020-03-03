@@ -1,9 +1,11 @@
 
 
-IBM Cloud Container Workshop
+# IBM Cloud Container Workshop
+
+###### Version: 2020-03-03
 
 ---
-# Kubernetes in IBM Cloud Lab
+## Lab 3: Kubernetes in IBM Cloud Lab
 ---
 
 ![kube2](../images/kube2.png)
@@ -27,7 +29,7 @@ During this lab we will be using two command line tools:
 ibmcloud
 ```
 
-which is a universal command line tool for interacting with all IBM Cloud services, including Kubernetes cluster.
+which is a universal command line tool for interacting with all **IBM Cloud services**, including Kubernetes cluster.
 
 ```
 kubectl
@@ -75,11 +77,13 @@ Deploy and manage your own Kubernetes cluster in the cloud. You can automate the
 
 ### 1. Login to Your virtual machine
 
-Login to Your provisioned server. Use Your IP address, as reveived from IBM staff.
+Connect to the lab27 server provided by IBM using server name, port number, username and password. 
 
-```ssh root@<YOUR IP ADDRESS>:port```
+``ssh -p <PORT> root@<Your IP Address:port``
 
-### 2. Check that ibmcloud  command
+or use any other SSH client (like putty)
+
+### 2. Check that ibmcloud command works
 
 Ibmcloud tools allows You to connect to all services in IBM cloud. Let's checks if it works again.
 
@@ -99,7 +103,7 @@ container-service/kubernetes-service   0.4.90
 dev                                    2.4.6        
 ```
 
-If there is no container-registry and container service, ask Your IBM staff.
+If there is no container-registry and container service, ask Your IBM staff. If their version differs - it's OK.
 
 ### 3. Check kubectl command
 
@@ -117,14 +121,14 @@ Client Version: v1.15.10
 The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 
-The error at the end is **normal** because we need to specify how to connect to the master (see below).
+The **error at the end is** **normal** because we need to specify how to connect to the master (see below).
 
 
 
 
 ### 4. Gain access to the cluster
 
-In the first lab You have created cluster in the IBM Cloud. Now it is the time to connect!
+You have created cluster in the IBM Cloud in the first lab . Now it is the time to connect!
 
 We need to:
 
@@ -183,14 +187,14 @@ ibmcloud ks cluster ls
 the result should list the cluster as "**normal**":
 
 ```
-oot@lnx101:~# ibmcloud ks cluster ls
+root@lnx101:~# ibmcloud ks cluster ls
 OK
 Name        ID                     State    Created          Workers   Location   Version        Resource Group Name   Provider   
 mycluster   bpcerkld0ftu1d64ppo0   normal   24 minutes ago   1         Dallas     1.15.10_1531   Default               classic   
 
 ```
 
-Next thing is to select cluster in CLI using "ibmcloud ks" command and prepare the "kubectl" credentials.
+Next we need to to select our cluster using "ibmcloud ks" command and prepare the "kubectl" credentials.
 
 `ibmcloud ks cluster config mycluster`
 
@@ -209,7 +213,11 @@ Export environment variables to start using Kubernetes.
 export KUBECONFIG=/root/.bluemix/plugins/container-service/clusters/mycluster/kube-config-hou02-mycluster.yml
 ```
 
- > **IMPORTANT** : Set the KUBECONFIG environment variable. **Copy the output from the previous command and paste it in your terminal**. The command output should look similar to the following.
+
+
+Now we are ready to configure kubectl command.
+
+ > IMPORTANT** : Set the KUBECONFIG environment variable. **Copy the output from the previous command and paste it in your terminal**. The command output should look similar to the following.
 
  
 
@@ -219,7 +227,25 @@ export KUBECONFIG=/root/.bluemix/plugins/container-service/clusters/mycluster/ku
 
 
 
- Verify that you can connect to your cluster by listing your worker nodes.
+ Verify that you can connect to your cluster:
+
+```
+kubectl version --short
+```
+
+response:
+
+```
+root@lnx15:~# kubectl version --short
+Client Version: v1.15.10
+Server Version: v1.15.10+IKS
+```
+
+The versions may differ, it's fine.
+
+
+
+Check if the node(s) are ready:
 
  `kubectl get nodes`
 
@@ -231,7 +257,7 @@ NAME            STATUS   ROLES    AGE   VERSION
 10.44.102.249   Ready    <none>   97s   v1.15.10+IKS
 ```
 
-**YOU ARE NOW CONNECTED TO YOUR CLUSTER** !
+The version and IP may differ, but the status has to be Ready!
 
 
 
@@ -503,7 +529,9 @@ default-us-icr-io     kubernetes.io/dockerconfigjson        1      90m
 
 ### 5. Open the Kubernetes Console
 
-Go to your IBM Cloud Console and click on the IBM Cloud icon on the top left part of the screen, than pick  "Kubernetes":
+Use the browser on Your laptop and open the IBM Cloud page https://cloud.ibm.com/
+
+Login and click on the IBM Cloud icon on the top left part of the screen, than pick  "Kubernetes":
 
 ![image-20200228121749132](README.assets/image-20200228121749132.png)
 
@@ -533,6 +561,8 @@ You may look around in the dashboard to see all the different resources (pods, n
 
 
 ### 6. Run a deployment
+
+Get back to Your lab27 server.
 
 Use your image to create a kubernetes deployment with the following command.
 
