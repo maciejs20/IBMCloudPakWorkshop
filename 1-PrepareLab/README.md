@@ -12,9 +12,9 @@
 Before you can run all the labs about containers in IBM Cloud, you should prepare your environment to execute those labs. Check the following instructions.
 
 
-# Task 1. IBM Cloud registration
+## 1. IBM Cloud registration
 
-Labs are running on the **IBM Cloud** (ex Bluemix).
+Some of Labs are running on the **IBM Cloud**.
 
 So before you can start any labs, you should have satisfied the following prerequisites :
 - [ ] You should have **1 valid email** 
@@ -84,7 +84,7 @@ You are now connected (and registred) to the IBM Cloud.
 > IMPORTANT : Take a note of your email address and your password.
 
 
-# Task 2. Apply a promo code 
+### Apply a promo code 
 
 Go to **Manage >Account > Account Settings**.
 
@@ -118,7 +118,7 @@ Go back to the **Catalog** and check that now you have access to **Containers in
 
 
 
-# Task 7.  Login to IBM Cloud
+## 3.  Login to IBM Cloud
 
 For these labs, we have decided to login to the IBM Cloud - so let's check if Your account works.
 
@@ -182,7 +182,7 @@ Tip: If you are managing Cloud Foundry applications and services
 
 
 
-# Task 8 : Create your first Kubernetes cluster
+## 4: Create your first Kubernetes cluster
 
 Kubernetes is an orchestration tool for scheduling app containers onto a cluster of compute machines. With Kubernetes, developers can rapidly develop highly available applications by using the power and flexibility of containers.
 
@@ -192,20 +192,20 @@ We will use this service later today.
 
 To create a lite cluster:
 
-## 1.  Select the IBM Kubernetes Service	
+### Select the IBM Kubernetes Service	
 
 From the Catalog, in the Containers category, click **Kubernetes Service**.
 
-![](./../images/IBMcontainerservice.png)
+![](../images/IBMcontainerservice.png)
 
-## 2. Create the service
+### Create the service
 
 To use that service, click the blue button(**create**) at the bottom:
 
-![](./../images/createcluster.png)
+![](../images/createcluster.png)
 
 
-## 3.	Choose a region and a free Cluster
+### Choose a region and Cluster
 
 Select **Free** for the cluster type:
 
@@ -217,7 +217,7 @@ Keep **mycluster** as the name of your cluster
 ![image-20190118145903795](../images/image-20190118145903795-7819943.png)
 
 
-## 4.	Click Create Cluster. 
+## Click Create Cluster. 
 
 The details for the cluster open, but the worker node in the cluster takes a few minutes (**around 10-15 minutes**) to provision. You can see the status of the worker node in the Worker nodes tab. When the status reaches Ready, your worker node is ready to be used. A green light will appear.
 
@@ -225,7 +225,7 @@ We don't need to wait for provisioning to be finished, we will need it later tod
 
 ![ProvisioningInProgress.png](../images/ProvisioningInProgress.png)
 
-## 5.	What is a lite cluster  
+#### What is a lite cluster  
 
 The lite cluster has one worker node with 2 CPU and 4 GB memory available for your apps to use for one month.
 
@@ -236,11 +236,35 @@ The resources that are required to run the cluster, such as **VLANS and IP addre
 **Tip**: Lite clusters that are created with a IBM Cloud free trial account are automatically removed after the free trial period ends or 30 days after creation, unless you upgrade to a IBM Cloud Pay-As-You-Go account.
 
 
-# Task 8. Conclusion
+
+# 5. Install VNC
+
+We have desktop service provisioned on the lab server, accesible via VNC. It requires to have the VNC Client installed on Your local laptop.
+
+If You don't have vnc client, You can get it from multiple sources, like:
+
+- https://pendriveapps.com/portable-vnc-viewer-realvnc/ - portable version, it does not require to install
+- https://www.realvnc.com/en/connect/download/viewer/ 
+- https://www.tightvnc.com/download.php
+
+Please install it at this time, make sure it works.
+
+
+
+# 6.Install SSH
+
+We have SSH service provisioned on the lab server, accesible via any ssh client. It requires to have the SSH Client installed on Your local laptop - it is available by default on Linux and MAC, but needs to be installed on Windows machines.
+
+We recommend to use putty: https://www.putty.org/
+
+
+
+# 7. Conclusion
 
 ###  Results
 <span style="background-color:yellow;">Successful exercise ! </span>
 You finally went thru the following features :
+
 - [x] You registered to IBM Cloud
 - [x] You applied a promo code
 - [x] You installed Docker on your laptop
@@ -251,6 +275,4 @@ You finally went thru the following features :
 - [x] You are ready for the labs
 ---
 # End of the lab
----
-# IBM Cloud Container Workshop
 ---
