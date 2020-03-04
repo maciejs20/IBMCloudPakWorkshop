@@ -5,7 +5,7 @@
 ###### Version: 2020-03-03
 
 ---
-## Lab 3: Kubernetes in IBM Cloud Lab
+# Lab 3: Kubernetes in IBM Cloud Lab
 ---
 
 ![kube2](../images/kube2.png)
@@ -69,13 +69,13 @@ In this lab, we are not going to implement such a complex environment.
 
 We will use the cluster that You have provisioned in the "Preparations" lab today.
 
-# Task 1 : prepare your environment
+# 1 : prepare your environment
 
 Deploy and manage your own Kubernetes cluster in the cloud. You can automate the deployment, operation, scaling, and monitoring of containerized apps in a cluster of independent compute hosts called worker nodes.
 
 ## 
 
-### 1. Login to Your virtual machine
+### Login to Your virtual machine
 
 Connect to the lab27 server provided by IBM using server name, port number, username and password. 
 
@@ -83,7 +83,7 @@ Connect to the lab27 server provided by IBM using server name, port number, user
 
 or use any other SSH client (like putty)
 
-### 2. Check that ibmcloud command works
+### Check that ibmcloud command works
 
 Ibmcloud tools allows You to connect to all services in IBM cloud. Let's checks if it works again.
 
@@ -105,7 +105,7 @@ dev                                    2.4.6
 
 If there is no container-registry and container service, ask Your IBM staff. If their version differs - it's OK.
 
-### 3. Check kubectl command
+### Check kubectl command
 
 Kubectl is a kubernetes command line interface. Let's check if it works.
 
@@ -126,7 +126,7 @@ The **error at the end is** **normal** because we need to specify how to connect
 
 
 
-### 4. Gain access to the cluster
+### Gain access to the cluster
 
 You have created cluster in the IBM Cloud in the first lab . Now it is the time to connect!
 
@@ -261,7 +261,7 @@ The version and IP may differ, but the status has to be Ready!
 
 
 
-# Task 2 : Creating a private registry
+# 2 : Creating a private registry
 
 Set up your own private image repository in IBM Cloud Container Registry to securely store and share Docker images with all cluster users. A private image repository in IBM Cloud is identified by a **namespace**. The namespace is used to create a unique URL to your image repository that developers can use to access private Docker images.
 
@@ -340,11 +340,11 @@ OK
 
 
 
-# Task 3 : Deploying Apps with Kubernetes
+# 3 : Deploying Apps with Kubernetes
 
 
 
-### 1. Download a GIT repo for this exercise
+## Download a GIT repo for this exercise
 
 **Create a directory** on your computer and move to that directory
 
@@ -377,7 +377,7 @@ Checking connectivity... done.
 
 
 
-### 2. Build a Docker image 
+## Build a Docker image 
 
 Build the image locally and tag it with the name that you want to use on the  kubernetes cluster. The tag includes the namespace name of `<namespace>` in the cluster. The tag also targets the master node of the cluster, which manages the job of placing it on one or more worker nodes. This is because of the alias you created in the previous step, with the cluster name linked to the master node name. Tagging the image this way tells Docker where to push the image in a later step. Use **lowercase alphanumeric** characters or underscores only in the image name. Don't forget the period (.) at the end of the command. The period tells Docker to look inside the current directory for the Dockerfile and build artifacts to build the image.
 
@@ -466,7 +466,7 @@ REPOSITORY                           TAG                 IMAGE ID            CRE
 us.icr.io/maciej-1975-nowak/hello1   latest              a6b30886ecf1        About a minute ago   76.1MB
  ```
 
-### 4. Push the image to the registry and authorise IKS to use the registry
+## Push the image to the registry and authorise IKS to use the registry
 
 Push your image into the private registry :
 
@@ -527,7 +527,7 @@ default-us-icr-io     kubernetes.io/dockerconfigjson        1      90m
 
 
 
-### 5. Open the Kubernetes Console
+## Open the Kubernetes Console
 
 Use the browser on Your laptop and open the IBM Cloud page https://cloud.ibm.com/
 
@@ -560,9 +560,9 @@ You may look around in the dashboard to see all the different resources (pods, n
 
 
 
-### 6. Run a deployment
+## Run a deployment
 
-Get back to Your lab27 server.
+Get back to Your lab27 server (SSH).
 
 Use your image to create a kubernetes deployment with the following command.
 
@@ -599,7 +599,7 @@ You can also look at the Kubernetes GUI dashboard to see the deployment and pods
 
 
 
-### 7. Create a service 
+## Create a service 
 
 Create a service to access your running container using the following command.
 
@@ -618,7 +618,7 @@ And you can also go to the dashboard :
 ![image-20200228122749857](README.assets/image-20200228122749857.png)
 
 
-### 8. What is a NodePort service type
+## What is a NodePort service type
 
 With the NodePort type of service, the kubernetes cluster creates a 5-digit port number to access the running container through the service. 
 
@@ -654,7 +654,7 @@ Or look at the dashboard:
  
 
 
-### 9. Let's verify if it works!
+## Let's verify if it works!
 
 In order to connect to the service created You will need to have two informations:
 
@@ -727,7 +727,7 @@ Using browser:
 
 ![image-20200228123604051](README.assets/image-20200228123604051.png)
 
-### 10. Application troubleshooting 
+## Application troubleshooting 
 
 You can obtain text-based information on all the resources running in your cluster using the following command if you want to debug your application when running
 
@@ -809,13 +809,13 @@ Congratulations ! You have deployed your first app to the IBM Cloud kubernetes c
 
 
 
-# Task 5 : Scaling Apps with Kubernetes
+# 4 : Scaling Apps with Kubernetes
 
 In this lab, understand how to update the number of replicas a deployment has and how to safely roll out an update on Kubernetes. Learn, also, how to perform a simple health check.
 
 For this lab, you need a running deployment with a single replica. First, we cleaned up the running deployment.
 
-### 1. Clean up the current deployment
+## Clean up the current deployment
 
 To do so, use the following commands :
 - To remove the deployment, use:
@@ -826,7 +826,7 @@ To do so, use the following commands :
 
 `kubectl delete service hello1-service`
 
-### 2. Run a clean deployment
+## Run a clean deployment
 
 To do so, use the following commands :
 
@@ -843,7 +843,7 @@ deployment.apps/hello1-deployment created
 
 
 
-### 3. Scale the application
+## Scale the application
 
 A replica is how Kubernetes accomplishes scaling out a deployment. A replica is a copy of a pod that already contains a running service. By having multiple replicas of a pod, you can ensure your deployment has the available resources to handle increasing load on your application.
 
@@ -905,7 +905,7 @@ hello1-deployment-864cd87c7f-vfnbl   1/1       Running   0          3m
 hello1-deployment-864cd87c7f-w7p6m   1/1       Running   0          3m
 ```
 
-### 4. Rollout an update to  the application
+## Rollout an update to  the application
 
 Kubernetes allows you to use a rollout to update an app deployment with a new Docker image. This allows you to easily update the running image and also allows you to easily undo a rollout, if a problem is discovered after deployment.
 
@@ -1114,6 +1114,6 @@ You have learnt how to create a Kubernetes cluster and see how to configure all 
 
 
 # End of the lab
----
-# IBM Cloud Container Workshop
+
+
 ---

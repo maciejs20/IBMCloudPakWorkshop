@@ -251,7 +251,7 @@ Please install it at this time, make sure it works.
 
 
 
-# 6.Install SSH
+# 6. Install SSH
 
 We have SSH service provisioned on the lab server, accesible via any ssh client. It requires to have the SSH Client installed on Your local laptop - it is available by default on Linux and MAC, but needs to be installed on Windows machines.
 
