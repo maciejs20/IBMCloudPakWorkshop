@@ -106,15 +106,7 @@ Enter your **promo code** and click **Apply**
 
 ![Apply Promo Code](./../images/applypromo2.png)
 
-> Close this window and **logout / login** to your account.
-
-Go back to the **Catalog** and check that now you have access to **Containers in Kubernetes Clusters** and the Container Registry.
-
-![Kubernetes](./../images/kcheck.png)
-
-
-
-
+> Close this window and **logout / login** to your account. Limit details may be different than those above; it's OK.
 
 
 
