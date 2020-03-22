@@ -48,15 +48,13 @@ If You don't have vnc client, get it from https://www.realvnc.com/en/connect/dow
 
 Use the vnc client and connect to the lab27 server **using port provided by IBM** **Staff**. Please double check the port number that this service runs!
 
-![image-20200303103548919](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20200303103548919.png)
-
-
+Login using password provided by IBM Staff
 
 ### Connect to the Web Console
 
 Select Applications->Internet and open firefox browser
 
-![image-20200303103637780](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20200303103637780.png)
+![image-20200303103637780](OpenshiftLab.assets/image-20200303103637780.png)
 
 You can now use the following URL - it belongs to our master node that controls whole cluster :
 
@@ -78,13 +76,13 @@ Accept any security risk You may encounter (Advanced->Accept Risk and continue).
 
 You are presented with Openshift login page.
 
-![image-20191008154755641](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20191008154755641-0542475.png)
+![image-20191008154755641](OpenshiftLab.assets/image-20191008154755641-0542475.png)
 
 
 
 Type your credentials (**user ID, password**) and click **Log in**. Welcome to OpenShift!
 
-![image-20191008154849227](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20191008154849227-0542529.png)
+![image-20191008154849227](OpenshiftLab.assets/image-20191008154849227-0542529.png)
 
 
 
@@ -295,4 +293,4 @@ Now go to the **"Applications -> Routes -> mypython** and click on the app url
 
 ---
 
-This this concludes the lab
+Let's this concludes the lab

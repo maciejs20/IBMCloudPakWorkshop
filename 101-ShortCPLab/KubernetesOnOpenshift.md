@@ -20,7 +20,9 @@
 
 Let's review basic terminology:
 
-![](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/Lab1.assets/descriptionk.png)
+![](KubernetesOnOpenshift.assets/descriptionk.png)
+
+
 
 **Cluster**
 
