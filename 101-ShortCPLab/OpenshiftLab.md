@@ -38,6 +38,8 @@ The instructor will give you:
 
 
 
+## Lab1
+
 ## 2.1 Create simple deployment in the OpenShift Web GUI
 
 ### Connect to the server
@@ -80,7 +82,9 @@ You are presented with Openshift login page.
 
 
 
-Type your credentials (**user ID, password**) and click **Log in**. Welcome to OpenShift!
+Type your credentials (**user ID, password**) and click **Log in**. **Use Your labprojXX account, not root!**
+
+Welcome to OpenShift!
 
 ![image-20191008154849227](OpenshiftLab.assets/image-20191008154849227-0542529.png)
 
@@ -88,9 +92,13 @@ Type your credentials (**user ID, password**) and click **Log in**. Welcome to O
 
 ### Deploy the app 
 
-We have created the Docker image during the kubernetes lab. Let's reuse that and deploy application using Openshift Web GUI to see how simple it is. No more boring kubectl's!
+We have created the Docker image during our previous kubernetes lab. 
+
+Let's reuse that image and deploy application using Openshift Web GUI to see how simple it is. No more boring kubectl's!
 
 We will pick our image directly from the container registry.
+
+Please note that all of the operations below are also accesible from OpenShift CLI command, the oc.
 
 
 
@@ -211,6 +219,12 @@ Use the:
 
 
 
+
+
+
+
+## Lab 2
+
 ## 2.2 Utilize the S2I in OpenShift Web GUI
 
 In this lab we will get familiar with the Source-To-Image mechanism, that allows to deploy the application from Your code repository directly.
@@ -293,4 +307,4 @@ Now go to the **"Applications -> Routes -> mypython** and click on the app url
 
 ---
 
-Let's this concludes the lab
+This concludes the lab
