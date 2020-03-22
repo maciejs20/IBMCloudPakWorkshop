@@ -289,7 +289,9 @@ Leave all remaining fields at it's defaults. Scroll down and click on "**Create*
 
 
 
-Openshift will download base Python image and will build the image using embedded workflow. It takes some time, but when finished, we will have new image in the image repository. Later the system will start the app, create it's service and route.
+Openshift will download base Python image and build the image using embedded build pipeline. It takes some time, but when finished we will have new image in the image repository. If would define the git callback, OpenShift could rebuild the app on each  code change! 
+
+After the system will build the image,  it will also start the app and create it's service and route. 
 
 Now go to the **"Builds -> Builds -> mypython** to see  builds for this app. There should be only one item available: "#1" - the first build. **Click on #1** to open the details.
 
@@ -299,9 +301,11 @@ Now verify "Logs" and "Events" to check if the build was successful.
 
 ### Access the app created
 
-Now go to the **"Applications -> Routes -> mypython** and click on the app url
+Now go to the **"Applications -> Routes -> mypython** 
 
 ![image-20200320154513724](OpenshiftLab.assets/image-20200320154513724.png)
+
+Try to  click on the app url to see if the app works.
 
 "Hello World" message shows, that the application has been created properly.
 
