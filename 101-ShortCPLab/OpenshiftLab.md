@@ -16,14 +16,18 @@
 
 ##  Introduction
 
-During this lab, we are going to set up your laptop to be prepared to all labs during this workshop. You should be able to connect to an **OpenShift** Cluster thru the Web Console and navigate thru the different kubernetes resources.
+In order to get familiar with Openshift concepts, we will try to replicate deployment that we have created manually with kubectl. Instead of working with CLI, we will utilize the Openshift Web GUI.
+
+Our whole group is working on the same Openshift cluster.
+
+Our apps will be exposed on *.apps.x.cloudpak.site via our Infra node, and all cluster-related communication will go to  our master node that controls the cluster.
 
 
 
 ![image-20191116105934442](OpenshiftLab.assets/image-20191116105934442-3898374.png)
 
 
-As you can see on the picture, you will connect to the OpenShift Cluster Web UI to the Master for management and development purposes. The end-users will connect to the applications thru the Infra Node.
+
 
 
 
@@ -42,7 +46,7 @@ We have desktop service provisioned on the lab server, accesible via VNC.
 
 If You don't have vnc client, get it from https://www.realvnc.com/en/connect/download/viewer/ or any other source.
 
-Use the vnc client and connect to the lab27 server. Please double check the port number that this service runs!
+Use the vnc client and connect to the lab27 server **using port provided by IBM** **Staff**. Please double check the port number that this service runs!
 
 ![image-20200303103548919](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20200303103548919.png)
 
@@ -54,7 +58,7 @@ Select Applications->Internet and open firefox browser
 
 ![image-20200303103637780](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20200303103637780.png)
 
-You can now use the following URL :
+You can now use the following URL - it belongs to our master node that controls whole cluster :
 
 ```http
 https://master.x.cloudpak.site:8443
@@ -62,7 +66,7 @@ https://master.x.cloudpak.site:8443
 
 Please take a note of this link because we will use it very often. 
 
-**This server is accesible ONLY via the VNC session, so do not try to open it from Your local web browser!**
+**This server is accesible ONLY via the VNC session from LAB27 server, so do not try to open it from Your local web browser directly!**
 
 
 
@@ -78,7 +82,7 @@ You are presented with Openshift login page.
 
 
 
-Type your credentials (**user ID, password**) and click **Log in**
+Type your credentials (**user ID, password**) and click **Log in**. Welcome to OpenShift!
 
 ![image-20191008154849227](/Users/maciej/Documents/00_IBM/Produkty/ICP/00_Workshops/Container WS Lectures/Labs-git/101-ShortCPLab/OpenshiftLab.assets/image-20191008154849227-0542529.png)
 
@@ -86,7 +90,9 @@ Type your credentials (**user ID, password**) and click **Log in**
 
 ### Deploy the app 
 
-We have created the image during the kubernetes lab. Let's reuse that and deploy application using Openshift Web GUI to see how simple it is
+We have created the Docker image during the kubernetes lab. Let's reuse that and deploy application using Openshift Web GUI to see how simple it is. No more boring kubectl's!
+
+We will pick our image directly from the container registry.
 
 
 
@@ -98,11 +104,11 @@ From the **catalog console**, pick "Deploy Image"
 
 Now set the fields:
 
-- Add to Porject: pick Your project, as given by IBM Staff
-- For Image Stream Tag: Namespace: pick Your project, as given by IBM Staff
-- For Image Stream Tag: Image Stream: pick the image that we have created (hello1)
-- For Image Stream Tag: Tag: pick the "2" tag
-- For Name: leave "hello1"
+- **Add to Project:** pick Your project, as given by IBM Staff
+- **For Image Stream Tag: Namespace**: pick Your project, as given by IBM Staff
+- **For Image Stream Tag: Image Stream:** pick the image that we have created (hello1)
+- **For Image Stream Tag: Tag:** pick the "2" tag
+- **For Name:** leave "hello1"
 
 
 
@@ -112,7 +118,7 @@ Now set the fields:
 
 
 
-Click on "Deploy" and later on "Continue to project overview"
+Click on **"Deploy"** and later on **"Continue to project overview"**
 
 <table><tr><td>
 <img src="OpenshiftLab.assets/image-20200320145040701.png" alt="image-20200320145040701" style="zoom:100%;" />
@@ -120,7 +126,15 @@ Click on "Deploy" and later on "Continue to project overview"
 
 
 
+Our app should be running properly now.
+
+
+
 ### Expose the app
+
+Do You remember our NodePort service that runs on each node of the cluster? We had to find proper IP and port... We have more useable mechanism in Openshift, that allows us to expose the app on it';s own URL automatically - it's called Routes.
+
+Let's configure that!
 
 Expand the hello1 deployment with ">" icon:
 
@@ -134,13 +148,13 @@ Expose the app - click on "Routes-External Traffic: Create Route"
 
 
 
-Do not change anything, just click on "**Create**"
+Do not change anything, just click on "**Create**". Openshift will take care about all the things that needs too be done: Kubernetes Service and Openshift Route.
 
 
 
 ### Check if app works
 
-After a while You will be presented with the url created especially for Your deployment. Click on that in order to connect to the application.
+After a while You will be presented with the url created especially for Your deployment. Click on that in order to connect to the application. Openshift has it's own ingress load balancer/reverse proxy that allows us to use URL's instead of IP+port.
 
 ![image-20200320150118986](OpenshiftLab.assets/image-20200320150118986.png)
 
@@ -150,13 +164,15 @@ After a while You will be presented with the url created especially for Your dep
 
 Increase the number of pods by using scaller steering controls on the deployment page.
 
-Remember about the resource limits that are set on the cluster!
+Remember about the resource limits that are set on the cluster - if You will ask for more than allowed, OpenShift will limit number of pods to allowed one!
 
 ![image-20200320150527342](OpenshiftLab.assets/image-20200320150527342.png)
 
 
 
 ### Check the logs and events
+
+Sometimes the app fails to start of behaves odd. That's why there are many diagnostic tools on the platform. We will not utilize all of them, but one of the most basic one is access to logs and events. 
 
 Click on the "three dot" icon on the deployment header and pick "View logs".
 
@@ -184,6 +200,8 @@ Click on **"Actions" ->> "Delete"** to clear the deployment, confirm with "Delet
 
 ### Delete the Service and Route
 
+Let's clean our environment - we need to make space for the next lab.
+
 Use the:
 
 - **Applications -> Services -> hello1 -> Actions -> Delete** to delete the service created
@@ -197,13 +215,13 @@ Use the:
 
 ## 2.2 Utilize the S2I in OpenShift Web GUI
 
-In this lab we will get familiar with the Source-To-Image mechanism, that allows to deploy the application from Your code repository  easily.
+In this lab we will get familiar with the Source-To-Image mechanism, that allows to deploy the application from Your code repository directly.
 
 ![image-20200320152345364](OpenshiftLab.assets/image-20200320152345364.png)
 
-In the previous exercise we have used pre-made container with all the runtime and apllication code. We were responsible for all the container configuration and build. 
+In the previous exercise we have used pre-made container with all the runtime and apllication code - so we were responsible for all the container configuration and build steps. It was our responsibility to create Dockerfile, to build and push the image. 
 
-Openshift offers different deployment options, including the Source-To-Image that gets application source code from the git repo and created the container automatically.
+Openshift offers different deployment options, including the Source-To-Image that gets application source code from the git repo and creates the container automatically.
 
 We will be using sample (and simple) code published here: https://github.com/maciejs20/IBMCloudPakWorkshop/tree/master/Code/1
 
@@ -225,11 +243,17 @@ You are presented with cluster catalog.
 
 Navigate to **Languages** tab shown on “Browse Catalog” tab
 
+
+
 ### Create application from python code
+
+Our apps requires Python runtime.
 
 Select **"Python"** category and click on **"Python"** icon to start runtime configuration. The system will present You with a creator.
 
 Click **Next** on the first page of the creator.
+
+
 
 In the **"Configuration"** select:
 
@@ -238,6 +262,9 @@ In the **"Configuration"** select:
 
 click on **"advanced options"** in the bottom of the screen to open detailed configuration.
 
+
+
+Our code resides in "Code/1" subdirectory on the git server.
 Fill remaining fields as follows:
 
 - **Application name** as mypython
@@ -250,7 +277,9 @@ Leave all remaining fields at it's defaults. Scroll down and click on "**Create*
 
 
 
-Now go to the **"Builds -> Builds -> mypython** to see all builds for this app. There is only one item available: #1 - the first build. Click on #1 to open the details.
+Openshift will download base Python image and will build the image using embedded workflow. It takes some time, but when finished, we will have new image in the image repository. Later the system will start the app, create it's service and route.
+
+Now go to the **"Builds -> Builds -> mypython** to see  builds for this app. There should be only one item available: "#1" - the first build. **Click on #1** to open the details.
 
 Now verify "Logs" and "Events" to check if the build was successful.
 
@@ -266,4 +295,4 @@ Now go to the **"Applications -> Routes -> mypython** and click on the app url
 
 ---
 
-Let's this concludes the lab
+This this concludes the lab
