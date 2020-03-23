@@ -112,10 +112,10 @@ From the **catalog console**, pick "Deploy Image"
 
 Now set the fields:
 
-- **Add to Project:** pick Your project, as given by IBM Staff
-- **For Image Stream Tag: Namespace**: pick Your project, as given by IBM Staff
+- **Add to Project:** pick Your "labprojXX" project, as given by IBM Staff
+- **For Image Stream Tag: Namespace**: pick Your "labprojXX" project, as given by IBM Staff
 - **For Image Stream Tag: Image Stream:** pick the image that we have created (hello1)
-- **For Image Stream Tag: Tag:** pick the "2" tag
+- **For Image Stream Tag: Tag:** pick the "2" tag to select latest revision of our image
 - **For Name:** leave "hello1"
 
 
@@ -229,17 +229,21 @@ Use the:
 
 ## 2.2 Utilize the S2I in OpenShift Web GUI
 
+In the previous exercise we have used pre-made container with all the runtime and apllication code - so we were responsible forl container's configuration and all build steps. It was our responsibility to create Dockerfile and to build and push the image. 
+
+Openshift offers different deployment options, including the Source-To-Image that gets application source code directly from the git repo and creates the container automatically. 
+
 In this lab we will get familiar with the Source-To-Image mechanism, that allows to deploy the application from Your code repository directly.
 
 ![image-20200320152345364](OpenshiftLab.assets/image-20200320152345364.png)
 
-In the previous exercise we have used pre-made container with all the runtime and apllication code - so we were responsible for all the container configuration and build steps. It was our responsibility to create Dockerfile, to build and push the image. 
 
-Openshift offers different deployment options, including the Source-To-Image that gets application source code from the git repo and creates the container automatically.
+
+
 
 We will be using sample (and simple) code published here: https://github.com/maciejs20/IBMCloudPakWorkshop/tree/master/Code/1
 
-Please note that there is no Dockerfile in this repo!
+Open the URL and note that there is no Dockerfile in this repo - just the Python code and requirements.txt file.
 
 ![image-20200320154913610](OpenshiftLab.assets/image-20200320154913610.png)
 

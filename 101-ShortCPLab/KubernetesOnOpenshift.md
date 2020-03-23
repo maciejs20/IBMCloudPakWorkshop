@@ -245,7 +245,13 @@ Build the image locally and tag it with the name that you want to use on the  ku
 
 `cd "container-service-getting-started-wt/Lab 1"`
 
-Look on the Dockerfile we will be using **(do not copy, do not modify  - just read)**:
+Look at the Dockerfile we will be using **(do not copy, do not modify  - just read)**:
+
+```
+cat Dockerfile
+```
+
+Our Dockerfile contains following lines:
 
 ```
 FROM node:9.4.0-alpine
@@ -258,22 +264,20 @@ EXPOSE  8080
 CMD node app.js
 ```
 
-We will be using nodejs base container imported from external image repository. Our build process will add our app code and install the pre-requisites embedded in package.json. 
-
-Last two commands will instruct Docker to expose port 8080 externally (which our app runs on) and start the container with command "node app.js".
+We will be using nodejs base container imported from external image repository. Our build process will add our app code and install the pre-requisites embedded in package.json. Last two commands will instruct Docker to expose port 8080 externally (which our app runs on) and start the container with command "node app.js".
 
 Let's utilize our Dockerfile and build the app with command (**remember to substitute the <your project> with labprojXX assigned to You by IBM Staff!**:
 
-`docker build -t docker-registry-default.apps.x.cloudpak.site/<your project>/hello1 .`
+`docker build -t docker-registry-default.apps.x.cloudpak.site/<your project>/hello1:1 .`
 
 example:
 
-`docker build -t docker-registry-default.apps.x.cloudpak.site/labproj01/hello1 . `
+`docker build -t docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:1 . `
 
 Output is:
 
 ```
-# docker build -t docker-registry-default.apps.x.cloudpak.site/labproj01/hello1 .
+# docker build -t docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:1 .
 Sending build context to Docker daemon  17.92kB
 Step 1/6 : FROM node:9.4.0-alpine
 9.4.0-alpine: Pulling from library/node
@@ -324,7 +328,7 @@ Step 6/6 : CMD node app.js
 Removing intermediate container 212381dacb83
  ---> a2e9893c8082
 Successfully built a2e9893c8082
-Successfully tagged docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:latest
+Successfully tagged docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:1
 ```
 
 **The red warnings You may see are from npm tool during the build and are nor important for our exercise.**
@@ -342,7 +346,7 @@ Example:
  ```
 # docker images docker-registry-default.apps.x.cloudpak.site/labproj01/hello1
 REPOSITORY                                                      TAG                 IMAGE ID            CREATED              SIZE
-docker-registry-default.apps.x.cloudpak.site/labproj01/hello1   latest              a2e9893c8082        About a minute ago   76.1MB
+docker-registry-default.apps.x.cloudpak.site/labproj01/hello1   1		              a2e9893c8082        About a minute ago   76.1MB
  ```
 
 
@@ -351,16 +355,16 @@ docker-registry-default.apps.x.cloudpak.site/labproj01/hello1   latest          
 
 Push your image into the private registry :
 
-`docker push docker-registry-default.apps.x.cloudpak.site/<your project>/hello1:latest`
+`docker push docker-registry-default.apps.x.cloudpak.site/<your project>/hello1:1`
 
 like:
 
-`docker push docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:latest`
+`docker push docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:1`
 
  Your output should look like this.
 
 ```
-# docker push docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:latest
+# docker push docker-registry-default.apps.x.cloudpak.site/labproj01/hello1:1
 The push refers to repository [docker-registry-default.apps.x.cloudpak.site/labproj01/hello1]
 549b16376e27: Pushed
 0f01aa6ec62b: Pushed
@@ -368,7 +372,7 @@ e3d99afed50e: Pushed
 0804854a4553: Pushed
 6bd4a62f5178: Pushed
 9dfa40a0da3b: Pushed
-latest: digest: sha256:f9572f5f96411dd1436fd5cd37bd4004d8e166f6f2da2ac24cd60067abe0d218 size: 1576
+1: digest: sha256:f9572f5f96411dd1436fd5cd37bd4004d8e166f6f2da2ac24cd60067abe0d218 size: 1576
 ```
 
 > **IMPORTANT** : be sure that all the layers have been pushed, wait for the digest line at the end.
@@ -384,13 +388,13 @@ Now we will use image that we have created before to create a kubernetes deploym
 *we are using internal registry locator of docker-registry.default.svc, this is how the he cluster works*
 
 ```
-kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/<Your project>/hello1:latest
+kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/<Your project>/hello1:1
 ```
 
 Output is :
 
 ```
-#kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/labproj01/hello1:latest
+#kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/labproj01/hello1:1
 
 deployment.apps/hello1-deployment created
 ```
@@ -436,7 +440,7 @@ service "hello1-service" exposed
 
 With the NodePort type of service, the kubernetes cluster creates a 5-digit port number to access the running container through the service. 
 
-The service is accessed through the IP address of the node with the NodePort port number. To discover the NodePort number that has been assigned, use the following command.
+The service is accessed through the IP address of the cluster's node. To discover the NodePort number that has been assigned, use the following command.
 
 `kubectl describe service hello1-service`
 
@@ -541,9 +545,9 @@ Hello world from hello1-deployment-74d54dbff7-jfg8q! Your app is up and running 
 
 Using lynx browser:
 
-![image-20200320133213704](Lab1.assets/image-20200320133213704.png)
+![image-20200320133213704](KubernetesOnOpenshift.assets/image-20200320133213704.png)
 
-Please note, that for this scenario we could not use url, we had just IP. That's because of the type of service used. When we will migrate to proper Openshift labs, we will be able to use Route mechanism insted of NodePort - it will allow us to expose the app using proper URL.
+Please note, that for this scenario we could not use application's url (which is not supported by this type of service), we had just the IP and PORT. When we will migrate to proper Openshift labs, we will be able to use Route mechanism (Kubernetes extension provided by OpenShift) instead of NodePort - it will allow us to expose the app using standard URL.
 
 
 
@@ -731,12 +735,12 @@ As some of You could have changed the deployment during debug tasks, we will del
 
 To do so, use the following commands :
 
-`kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/<Your namespace>/hello1:latest`
+`kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/<Your namespace>/hello1:1`
 
 output:
 
 ```
-#kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/labproj01/hello1:latest
+#kubectl create deployment hello1-deployment --image=docker-registry.default.svc:5000/labproj01/hello1:1
 
 deployment.apps/hello1-deployment created
 ```
@@ -823,7 +827,7 @@ sample output when Your replica request is being limited:
 38s         1m           6       hello1-deployment-54cd756999.15fe045a03cec23c           ReplicaSet                                          Warning   FailedCreate        replicaset-controller            (combined from similar events): Error creating: pods "hello1-deployment-54cd756999-bvj5p" is forbidden: exceeded quota: labproj01-mem-cpu-quota, requested: requests.memory=500Mi, used: requests.memory=2000Mi, limited: requests.memory=2Gi
 ```
 
-
+As You can see, we are limited with memory quota (*Error creating: pods "hello1-deployment-54cd756999-bvj5p" is forbidden: exceeded quota: labproj01-mem-cpu-quota, requested: requests.memory=500Mi, used: requests.memory=2000Mi, limited: requests.memory=2Gi*)
 
 #### Clean the mess
 
@@ -856,7 +860,7 @@ hello1-deployment-54cd756999-z27gg   1/1     Terminating   0          5m
 
 Kubernetes allows you to use a rollout to update an app deployment with a new Docker image. This allows you to easily update the running image and also allows you to easily undo a rollout, if a problem is discovered after deployment.
 
-In the previous lab, we created an image. Let's make a new version of the image that includes new content and use a :2 tag. 
+In the previous lab, we created an image with a **:1** tag. Let's make a new version of the image that includes new content and uses a **:2** tag. 
 
 If you are in "Lab 1" directory, you need to go to "Lab 2" directory:
 
@@ -943,7 +947,7 @@ The push refers to repository [docker-registry-default.apps.x.cloudpak.site/labp
 
 
 
-You can now update your deployment to use the latest image just by calling kubectl with appropriate options:
+You can now update your deployment to use the latest image just by calling **"kubectl set"** with appropriate options:
 
 ```
 # kubectl set image deployment/hello1-deployment  hello1=docker-registry.default.svc:5000/<Your project>/hello1:2
