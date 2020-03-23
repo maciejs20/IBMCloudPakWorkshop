@@ -1,6 +1,8 @@
 # Cloud Pak for Application Lab - short version
 
+This lab has been created by Maciej Szulc (maciej.szulc@pl.ibm.com) for IBM Poland's Container Workshop. If You are interested in participating in this free event held monthly in Warsaw in polish language, just contact the author.
 
+Workshop also contains parts originally created by  Franck Descollonges (IBM) and Philippe Thomas (IBM)
 
 
 

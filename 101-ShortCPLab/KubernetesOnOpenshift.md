@@ -8,7 +8,9 @@
 
 # Cloud Pak for Application Lab - short version
 
+This lab has been created by Maciej Szulc (maciej.szulc@pl.ibm.com) for IBM Poland's Container Workshop. If You are interested in participating in this free event held monthly in Warsaw in polish language, just contact the author.
 
+Workshop also contains parts originally created by  Franck Descollonges (IBM) and Philippe Thomas (IBM).
 
 
 
@@ -105,11 +107,10 @@ kubectl config set-cluster <cluster> --insecure-skip-tls-verify=true --server=<c
 kubectl config set-context <namespace>/<cluster>/<user> --user=<user>/<cluster> --namespace=<namespace> --cluster=<cluster_url>
 kubectl config use-context <namespace>/<cluster>/<user>
 
+#DO NOT ENTER THIS, IT IS JUST AN EXAMPLE NOT BEING USED FOR OUR LAB!
 ```
 
-
-
-We will just login with single and simple oc command which speeds the things up.
+we will just login with single and simple oc command which speeds the things up.
 
 
 ```
@@ -244,11 +245,28 @@ Build the image locally and tag it with the name that you want to use on the  ku
 
 `cd "container-service-getting-started-wt/Lab 1"`
 
-and than build the image:
+Look on the Dockerfile we will be using **(do not copy, do not modify  - just read)**:
+
+```
+FROM node:9.4.0-alpine
+COPY app.js .
+COPY package.json .
+RUN npm install &&\
+    apk update &&\
+    apk upgrade
+EXPOSE  8080
+CMD node app.js
+```
+
+We will be using nodejs base container imported from external image repository. Our build process will add our app code and install the pre-requisites embedded in package.json. 
+
+Last two commands will instruct Docker to expose port 8080 externally (which our app runs on) and start the container with command "node app.js".
+
+Let's utilize our Dockerfile and build the app with command (**remember to substitute the <your project> with labprojXX assigned to You by IBM Staff!**:
 
 `docker build -t docker-registry-default.apps.x.cloudpak.site/<your project>/hello1 .`
 
-like:
+example:
 
 `docker build -t docker-registry-default.apps.x.cloudpak.site/labproj01/hello1 . `
 
