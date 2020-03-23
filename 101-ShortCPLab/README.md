@@ -2,8 +2,7 @@
 
 version 1.0 2020.03.22
 
-This is a shot version of Container/Kubernetes/Openshift workshop created for IBM Poland by Maciej Szulc (maciej.szulc@pl.ibm.com).
-This workshop also contains labs created by  Franck Descollonges (IBM) and Philippe Thomas (IBM).
+This is a short version of Container/Kubernetes/Openshift/CloudPak workshop created for IBM Poland by Maciej Szulc (maciej.szulc@pl.ibm.com). 
 
 __We do not distribute presentations used during the workshop.__
 
