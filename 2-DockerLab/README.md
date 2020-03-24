@@ -158,7 +158,17 @@ hello-world         latest              fce289e99eb9        3 weeks ago         
 
 ## From where was the `hello-world` image pulled? 
 
-Go to `https://hub.docker.com/_/hello-world/` and you can read about this image. Docker-hub is a registry that holds docker images for use. Docker-hub is not the only registry, IBM Cloud Public can serve as a docker registry. You can also have (or define) private registries.
+Go to 
+
+https://hub.docker.com/_/hello-world
+
+[]: https://hub.docker.com/_/hello-world
+
+
+
+[https://hub.docker.com/_/hello-world]: https://hub.docker.com/_/hello-world	"Docker hub for hello-world"
+
+ and you can read about this image. Docker-hub is a registry that holds docker images for use. Docker-hub is not the only registry, IBM Cloud Public can serve as a docker registry. You can also have (or define) private registries.
 
 ![dockerHub](./../images/dockerhubhello.png) 
 
@@ -692,9 +702,10 @@ Now, let us look at another Dockerfile shown below:
 
 ```console
 FROM ubuntu
-MAINTAINER Philippe
-RUN apt-get update
-RUN apt-get install -y nginx
+MAINTAINER maciej.szulc
+RUN apt-get update \
+     && apt-get install -y nginx \
+     && rm -rf /var/lib/apt/lists/*
 ENTRYPOINT ["/usr/sbin/nginx","-g","daemon off;"]
 EXPOSE 80
 ```
@@ -715,11 +726,11 @@ Copy and paste the Dockerfile text (see above). Save the file.
 
 Now build the image:
 
-`docker build . -t webapp:latest`
+`docker build . -t webapp:1`
 
 And run it:
 
-`docker run -d -p 8081:80 --name webserver webapp`
+`docker run -d -p 8081:80 --name webserver webapp:1`
 
 Let's verify if the app works with curl.
 
