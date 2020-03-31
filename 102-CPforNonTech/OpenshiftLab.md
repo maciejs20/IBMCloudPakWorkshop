@@ -1,6 +1,8 @@
 # Cloud Pak for Non-Tech's Lab 
 
-This lab has been created by Maciej Szulc (maciej.szulc@pl.ibm.com) for IBM Poland's Container Workshop. If You are interested in participating in this free event held monthly in Warsaw in polish language, just contact the author.
+This lab has been created by Maciej Szulc (maciej.szulc@pl.ibm.com) for IBM Poland's Container Workshop. 
+
+If You are interested in participating in this free event held monthly in Warsaw in polish language, just contact the author.
 
 Workshop also contains parts originally created by  Franck Descollonges (IBM) and Philippe Thomas (IBM)
 
@@ -103,7 +105,7 @@ VNC client is a part of MacOS system, You don't have to install anything.
 
 
 
-# Part 2: OpenShift
+# Part 2: OpenShift basic lab
 
 
 
@@ -315,9 +317,9 @@ Use the:
 
 ## 2.2 Utilize the S2I in OpenShift Web GUI
 
-In the previous exercise we have used pre-made container with all the runtime and apllication code - so we were responsible for container's configuration and all build steps. It was our Technical Team's responsibility to create Dockerfile and to build and push the image and make it available for You
+In the previous exercise we have used pre-made container with all the runtime and apllication code. It was our Technical Team's responsibility to create Dockerfile and to build and push the image and make it available for You. In order to create the image, they had to reate all the files required, build image with "docker build" command and push using "docker push". It was not an automatic task...
 
-Openshift offers many different deployment options, including the Source-To-Image that gets application source code directly from the git repo and creates the container automatically. It's a kind of magic - developer pushes the code and Openshift creates the app automagically on each code change.
+Openshift offers many different deployment options, including the Source-To-Image that gets application source code directly from the git repo and creates the container automatically. It's a kind of magic - developer pushes the code and Openshift creates the app automagically on each code change. No need to create Dockerfile, no need to push the container!
 
 In this lab we will get familiar with the Source-To-Image mechanism, that allows to deploy the application from Your code repository directly.
 
@@ -329,77 +331,87 @@ In this lab we will get familiar with the Source-To-Image mechanism, that allows
 
 We will be using sample (and simple) code published here: https://github.com/maciejs20/IBMCloudPakWorkshop/tree/master/Code/102
 
-Open the URL and note that there is no Dockerfile in this repo - just the Python code and requirements.txt file.
 
-![image-20200320154913610](OpenshiftLab.assets/image-20200320154913610.png)
+
+![image-20200331191349771](OpenshiftLab.assets/image-20200331191349771.png)
 
 ### Log in to the cluster and access the catalog
 
 Go to Your VNC client, open web browser and navigate to our cluster at https://master.x.cloudpak.site:8443
 
-Login using credentials provided by IBM  (Openshift Cluster Account)
+Login using credentials provided by IBM  (Openshift Cluster Account).
+
+If You are already logged in, just pick "Service Catalog" in the upper part of the screen.
 
 
 
-You are presented with cluster catalog.
+You are presented with service catalog.
 
 ![image-20200320152634214](OpenshiftLab.assets/image-20200320152634214.png)
 
-Navigate to **Languages** tab shown on “Browse Catalog” tab
+
 
 
 
 ### Create application from python code
 
-Our apps requires Python runtime.
+Our apps is written in Python language - so we need to pick it.
 
-Select **"Python"** category and click on **"Python"** icon to start runtime configuration. The system will present You with a creator.
+- Navigate to **Languages** tab shown on “Browse Catalog” tab
 
-Click **Next** on the first page of the creator.
+- Select **"Python"** category and click on **"Python"** icon to start runtime configuration. 
+
+  ![image-20200331191754555](OpenshiftLab.assets/image-20200331191754555.png)
+
+  
+
+- The system will present You with a creator. Click **Next** on the first page of the creator.
+
+  ![image-20200331191835724](OpenshiftLab.assets/image-20200331191835724.png)
 
 
 
-In the **"Configuration"** select:
+In the **"Configuration"** step select:
 
-- **Add to project** - select Your project (labprojxx)
+- **Add to project** - select Your project (**labprojxx** as assigned by IBM Staff)
 - **Version** -  3.6
-
-click on **"advanced options"** in the bottom of the screen to open detailed configuration.
-
-
-
-Our code resides in "Code/1" subdirectory on the git server.
-Fill remaining fields as follows:
-
 - **Application name** as mypython
-- **Git repository URL** as “https://github.com/maciejs20/IBMCloudPakWorkshop.git”
-- **Context Dir** as "Code/1"
+- **Git repository URL** as https://github.com/maciejs20/IBMCloudPakWorkshop.git
+
+![image-20200331192157100](OpenshiftLab.assets/image-20200331192157100.png)
+
+
+
+Click on **"advanced options"** in the bottom of the screen to open detailed configuration.
+
+Our code resides in "Code/102" subdirectory on the git server - so we need to add this to the build.
+Fill  fields as follows:
+
+- **Context Dir** as "Code/102"
+
+**Double check if You have put the "Code/102" as Context Dir -  this is the step that is usualy missed during this lab!**
+
+
 
 Leave all remaining fields at it's defaults. Scroll down and click on "**Create**"
 
-![image-20200320154026026](OpenshiftLab.assets/image-20200320154026026.png)
+![image-20200331192304280](OpenshiftLab.assets/image-20200331192304280.png)
 
 
 
-Openshift will download base Python image and build the image using embedded build pipeline. It takes some time, but when finished we will have new image in the image repository. If would define the git callback, OpenShift could rebuild the app on each  code change! 
+Openshift will now download base Python image and build the image using embedded build pipeline. It takes some time, but when finished we will have new image in the image repository. 
 
-After the system will build the image,  it will also start the app and create it's service and route. 
+The OpenShift could rebuild the app on each  code change if configured properly!
 
-Now go to the **"Builds -> Builds -> mypython** to see  builds for this app. There should be only one item available: "#1" - the first build. **Click on #1** to open the details.
-
-Now verify "Logs" and "Events" to check if the build was successful.
-
-
+After the system will build the image,  it will also start the app and create it's service and route. **It will take approx. 2-3 minutes, so just relax and wait!**
 
 ### Access the app created
 
-Now go to the **"Applications -> Routes -> mypython** 
+Now go to the **"Applications -> Routes ** and click on Your app URL to open it
 
-![image-20200320154513724](OpenshiftLab.assets/image-20200320154513724.png)
+![image-20200331192631628](OpenshiftLab.assets/image-20200331192631628.png)
 
-Try to  click on the app url to see if the app works.
 
-"Hello World" message shows, that the application has been created properly.
 
 ---
 
