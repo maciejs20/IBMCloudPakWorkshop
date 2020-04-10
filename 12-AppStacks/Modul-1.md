@@ -1,4 +1,21 @@
-# Login to the system
+![image-20200410100208892](Modul-1.assets/image-20200410100208892.png)
+
+
+
+This is a part of IBM CloudPak for Applications Workshop created for IBM Poland by Maciej Szulc (maciej.szulc@pl.ibm.com).
+Workshop labs contains parts created originally by several IBMers, including Franck Descollonges, Philippe Thomas,  [Henry Nash](https://github.com/henrynash) and [Steve Martinelli](https://github.com/stevemar). 
+
+If You're interested in participating in this event, held monthly in Polish language in Warsaw, contact maciej.szulc@pl.ibm.com.
+
+__We do not distribute presentations used during the workshop.__
+
+
+
+This labs contains basic exercises for Appsody, CodeWind and Application Stacks. We are covering both GUI and CLI approach to develop Node.JS Express app.
+
+
+
+# 1. Login to the system
 
 Our lab environment is quite complex, that's why we will be using non-standard techniques to access it. Our CloudPak cluster is not accesible from the Internet, we need to use intermediate server.
 
@@ -11,26 +28,29 @@ This is how it is constructed:
 You have received account details which looks like:
 
 ```
-*****************************************************************************
- ID Środowiska: 25
+*******************************************************************************
+ ID Środowiska: 01
+*******************************************************************************
 
-----------------------------  LAB27 server account -------------------------
- Server:        lab27.team.waw.pl  SSH Port: 22039      VNC Port: 24039
+------------------------------  LAB27 server account --------------------------
+ Serwer:        lab27.team.waw.pl  Porty: SSH:22015     VNC:24015 Desktop:26015
+                            Hasło: 44444aaaaa
 
------------- OPENSHIFT CLUSTER ACCOUNT for master.x.cloudpak.site-------------
-Userid:   labuser25    Password:   myPass11    Project:   labproj25
-------------------------------------------------------------------------------
+-------------   Konto  OPENSHIFT CLUSTER dla  4.x.cloudpak.site   -------------
+Adres klastra (niedostępny z internetu): https://lb.4.x.cloudpak.site:6443
+Userid:   labuser01    Hasło:   44444aaaaa    Projeky:   labproj01
+-------------------------------------------------------------------------------
 ```
 
 
 
 You will have to use:
 
-- VNC port number - **like** "24039" in the example above
-- Desktop port number - like 25039 in the example above
-- PASSWORD - **like** "myPass11"  in the example above. It works for all types of connection
-- Openshift Userid - **like** "labuser25"  in the example above
-- Openshift Project - **like** "labproj25"  in the example above
+- VNC port number - **like** "24015" in the example above
+- Desktop port number - like 26015 in the example above
+- PASSWORD - **like** "44444aaaaa"  in the example above. It works for all types of connection
+- Openshift Userid - **like** "labuser01"  in the example above
+- Openshift Project - **like** "labproj01"  in the example above
 
 **Please note this data, You will  need that later.**
 
@@ -78,35 +98,36 @@ VNC client is a part of MacOS system, You don't have to install anything.
 
   
 
-  ### VNC for Windows devices
 
-  VNC client is NOT a part of Windows system, You have to install VNC Client.
+### VNC for Windows devices
 
-  There are many sources of VNC client, I'd recommend:
+VNC client is NOT a part of Windows system, You have to install VNC Client.
 
-  - https://www.realvnc.com/en/connect/download/viewer/ 
+There are many sources of VNC client, I'd recommend:
 
-  From the menu below "Download VNC Viewer" pick **"Standalone EXE x86"** and download it. Open the file (it does not require to be installed) and fill with connection address:
+- https://www.realvnc.com/en/connect/download/viewer/ 
 
-  ```
-  lab27.team.waw.pl:<YOUR VNC PORT NUMBER>
-  ```
+From the menu below "Download VNC Viewer" pick **"Standalone EXE x86"** and download it. Open the file (it does not require to be installed) and fill with connection address:
 
-  example:
+```
+lab27.team.waw.pl:<YOUR VNC PORT NUMBER>
+```
 
-  ```
-  lab27.team.waw.pl:24051
-  ```
+example:
 
-  **substitute <YOUR VNC PORT NUMBER> with the data You have collected before**
+```
+lab27.team.waw.pl:24051
+```
 
-  ![image-20200331182121667](Modul-1.assets/image-20200331182121667.png)
+**substitute <YOUR VNC PORT NUMBER> with the data You have collected before**
 
-  
+![image-20200331182121667](Modul-1.assets/image-20200331182121667.png)
+
+
 
 ## Web Desktop Connection
 
-**Use this section ONLY if You have chosen the Web Desktop as connection method. It is not required if You are using VNC!**
+**Use this section ONLY if You have chosen the Web Desktop as connection method. It is not required if You are using VNC but You may encounter difficulties with copy-and-paste!**
 
 Open Your browser and enter the address:
 
@@ -139,7 +160,7 @@ It is quite usefull to change the "Input Method" to "Text Input" - it will open 
 
 ​	
 
-# System check
+# 2. System check
 
 Now we have GUI console connected to our lab27 server. It is time to check if Your server is ready for our labs. 
 
@@ -154,6 +175,8 @@ Open the CLI console using button below:
 ## Docker
 
 First we will check if docker works. It is required by CodeWind and appsody.
+
+Enter command below in the CLI window.
 
 ```
 docker version
@@ -186,9 +209,13 @@ Server: Docker Engine - Community
   (...)
 ```
 
+Component versions may differ; that's OK.
+
 ## Appsody CLI
 
+Now let's check our Appsody.
 
+Enter command below in the CLI window.
 
 ```
 appsody version
@@ -202,6 +229,8 @@ You should see output similar to the following:
 $ appsody version
 appsody 0.6.0
 ```
+
+Component versions may differ; that's OK.
 
 
 
@@ -230,9 +259,11 @@ error: You must be logged in to the server (Unauthorized)
 
 The "Unauthorized" error we got is fine since we are not logged into our Openshift Cluster.
 
+Component versions may differ; that's OK.
 
 
-# Connect to OpenShift cluster
+
+# 3. Connect to OpenShift cluster
 
 Login to the cluster using "oc login command"
 
@@ -240,11 +271,13 @@ Login to the cluster using "oc login command"
 oc login https://lb.4.x.cloudpak.site:6443
 ```
 
-Use Your **labuserXX** username with corresponding password.
+Use Your **labuserXX** username with corresponding password, as given by IBM Staff. 
 
+Use Your account only!
 
+![image-20200410103922589](Modul-1.assets/image-20200410103922589.png)
 
-Accept any certificate security warnings.
+`Accept` any certificate security warnings.
 
 
 
@@ -252,15 +285,11 @@ Accept any certificate security warnings.
 
 
 
-## Configure Appsody CLI
 
-In this section we'll configure our Appsody CLI to pull in Collections.
 
-### List existing Appsody stacks
+## List existing Appsody stacks
 
 The Appsody CLI gives you access to stacks, which are stored in stack repositories. These can be local, private to the Enterprise or public. To get the list of available repos, run this command.
-
-
 
 ```
 appsody repo list
@@ -279,13 +308,13 @@ NAME      	URL
 
 
 
-The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with the Kabanero open source project (which is part of Cloud Pak for Applications). So the first thing we need to do is to tell the CLI about this.
+The exact repo list may be different to the above. `incubator` is one of the repos in the appsody project public hub (`appsodyhub`). For this workshop we are going to use the private enterprise-grade collection of stacks that come with the IBM Cloud Pak for Applications. So the first thing we need to do is to tell the CLI about this.
 
 
 
 ## Add stack that comes with CloudPak for Applications
 
-
+Add stack by command below:
 
 ```
 appsody repo add cp4a https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0.6.3/kabanero-stack-hub-index.yaml
@@ -293,13 +322,13 @@ appsody repo add cp4a https://github.com/kabanero-io/kabanero-stack-hub/releases
 
 
 
-Now when we get our list of repos, we should see Kabanero listed:
-
-
+Now when we get our list of repos, we should see CP4A listed:
 
 ```
 appsody repo list
 ```
+
+
 
 You should see output similar to the following:
 
@@ -315,15 +344,13 @@ cp4a      	https://github.com/kabanero-io/kabanero-stack-hub/releases/download/0
 
 We can now list the appsody stacks available in the Collection:
 
-
-
 ```
 appsody list cp4a
 ```
 
+
+
 You should see output similar to the following:
-
-
 
 ```
 $>appsody list cp4a
@@ -340,23 +367,21 @@ cp4a	nodejs-express   	0.2.10   	scaffold, *simple	Express web framework for Nod
 
 Given that we'll exclusively be using the kabanero stacks in this workshop, for ease of use we can set the cp4apps repository to be the default for the CLI:
 
-
-
 ```
 appsody repo set-default cp4a
 ```
 
+
+
 Now is we get the list of repos, we should see cp4a is the default:
-
-
 
 ```
 appsody repo list
 ```
 
+
+
 You should see output similar to the following:
-
-
 
 ```
 $>appsody repo list
@@ -374,9 +399,7 @@ incubator	https://github.com/appsody/stacks/releases/latest/download/incubator-i
 
 Appsody and CodeWind allows You to use both command-line interface and  GUI interface provided by CodeWind. 
 
-
-
-We will start this lab with CLI, which is IDE-independent and may be used with every tool You need. e will utilize the GUI in the following sections as well.
+We will start this lab with CLI, which is IDE-independent and may be used with every tool You have. Later we will utilize the GUI in the following sections as well.
 
 
 
@@ -396,13 +419,15 @@ In this section we'll be using the following appsody commands:
 
 ### Create a new directory to work with new applications
 
-We recommend creating a new directory from your user home to work with new Appsody based applications, i.e.:
+Go to You our command line window and create appsody-apps directory
 
 ```
 cd ~
 mkdir appsody-apps
 cd appsody-apps
 ```
+
+
 
 ### Create a new application
 
@@ -422,8 +447,6 @@ Now we have to initialize the project using appsody init
 ```
 appsody init cp4a/nodejs-express
 ```
-
-
 
 
 
@@ -452,8 +475,6 @@ The key artifacts are:
 
 The sample application comes ready to run using appsody:
 
-
-
 ```
 appsody run
 ```
@@ -461,8 +482,6 @@ appsody run
 
 
 This step results in the stack image, with the sample application mounted into it, run in your local Docker environment. The output finishes by giving you the endpoint for the application.
-
-
 
 ```
 $>appsody run
@@ -503,11 +522,15 @@ Running command:  npm start
 
 
 
-Select Applications->Internet and open firefox browser
+Select `Applications->Internet` from the desktop menu and open `firefox` browser
 
 ![image-20200409150540376](Modul-1.assets/image-20200409150540376.png)
 
-We can now check that this is running by hitting the endpoint [http://localhost:3000](http://localhost:3000/):
+
+
+We can now check that the app is running by hitting the endpoint [http://localhost:3000](http://localhost:3000/). You have to use the browser on lab27 server, not on Your laptop!
+
+
 
 You should see output similar to the following:
 
@@ -522,6 +545,8 @@ By default, the template sample application also provides the following endpoint
 
 For more details on this particular stack, refer to [Node.js Express Stack](https://github.com/kabanero-io/collections/blob/master/incubator/nodejs-express/README.md).
 
+
+
 ### Stop the application
 
 To stop the application container, run this command from the same directory (e.g. in another terminal window) or just click ctrl-C in the terminal window.
@@ -535,8 +560,6 @@ appsody stop
 ### Test the application
 
 A stack will typically come with a test framework - and this can be initiated by running:
-
-
 
 ```
 appsody test
@@ -617,9 +640,11 @@ The examples here will be based on VS Code.
 
 
 
-Go to Linux terminal window and check if You are in the proper directory (~/appsody_sample_nodejs-express):
+Go to Linux terminal window and `check` if You are in the proper directory (~/appsody_sample_nodejs-express):
 
 ![image-20200409153607912](Modul-1.assets/image-20200409153607912.png)
+
+
 
 open VSCode by command:
 
@@ -749,7 +774,7 @@ Now close the VSCode (File->Exit) and go to Your Linux terminal window.
 
 
 
-## Build the application
+# 4. Build the application image
 
 Up until now, we have been using appsody in what we call "Rapid Local Development Mode", where we can cycle through code change, test and debug - all within a local Docker environment. Appsody is making this environment possible, through a combination of the CLI, the stack and appsody code within that stack. Once you are ready to deploy the application outside of appsody control, there are two additional appsody commands to help you.
 
@@ -757,7 +782,8 @@ These enable a couple of capabilities:
 
 - support for building a standalone docker image (containing your application and the stack technologies), that can be deployed either using regular Docker commands, or manually to a kubernetes cluster.
 - support deploying the final image directly to a kubernetes cluster, under control of the Appsody Operator. 
-- 
+
+  
 
 In this section we will carry out the first of these - i.e. simply building a standalone image. 
 
@@ -844,7 +870,7 @@ rm -rf appsody_sample_nodejs-express/
 
 
 
-## Appsody tasks on VS Code
+# 5. Appsody tasks on VS Code
 
 Go to Linux terminal window and open VSCode by command:
 
@@ -852,7 +878,7 @@ Go to Linux terminal window and open VSCode by command:
 code
 ```
 
-There is **NO** need to add the dot at the end - as we don't have project directory (You have deleted it just as few seconds ago)
+There is **NO** need to add the dot at the end - as we don't have project directory (You have deleted it just a few seconds ago)
 
 Open the **explorer of VSCode** - if not already opened and than open the **CodeWind tab** in the explorer. It is located at the bottom of Your screen.
 
@@ -860,7 +886,9 @@ Open the **explorer of VSCode** - if not already opened and than open the **Code
 
 
 
-Click on the "No projects" item, than enter "kabanero node" in the runtime selection sub window:
+## Create project
+
+`Click` on the "No projects" item, than enter "kabanero node" in the runtime selection sub window:
 
 ![image-20200409162024106](Modul-1.assets/image-20200409162024106.png)
 
@@ -896,7 +924,7 @@ Right-Click on the "simple app" and pick "Add Project to Workspace".
 
 
 
-### Project option
+## Project activities
 
 Go to the "simple-app-gui" application and `right click` on it to access the various options available:
 
@@ -912,7 +940,9 @@ Click `Open Application` to access the application - firefox window will be open
 
 > **NOTE** Codewind exposes your applications on different external ports. This will allow you to run multiple projects of same type.
 
-Close the browser.
+
+
+Now please `close` the browser.
 
 
 
@@ -948,7 +978,7 @@ You can also run the application by using `Restart in Run Mode`:
 
 ![image-20200409163758103](Modul-1.assets/image-20200409163758103.png)
 
-Once it is restarted, you can access the application by clicking on the button as shown below:
+Once it is restarted, you can access the application by `clicking` on the button as shown below:
 
 ![image-20200409163841480](Modul-1.assets/image-20200409163841480.png)
 
@@ -958,41 +988,43 @@ Similarly, you can also do debugging by using `Restart in Debug Mode`.
 
 
 
-### Application Performance, Monitor, Profiling with Codewind**
+## 
 
-You can launch the app monitor by selecting `Open Appplication Monitor`:
+## Application Performance, Monitor, Profiling with Codewind
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LpTxyUN9fd2t5DB-0D5%2F-LvPwN9PBPpKUExzbfZJ%2F-Lq7zWqdgX_WkESaDi9E%2Fjs_lab1_codewind_app_monitor.png?generation=1575631302519979&alt=media)
+You can launch the app monitor by opening `Metrics Dashboard`:
 
-Open application monitor
+![image-20200410091321832](Modul-1.assets/image-20200410091321832.png)
+
+
 
 The monitor dashboard will open in the browser:
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LpTxyUN9fd2t5DB-0D5%2F-LvPwN9PBPpKUExzbfZJ%2F-Lq7zWqfUrMoh_i3BxyM%2Fjs_lab1_app_monitor_dashboard.png?generation=1575631301255815&alt=media)
+![image-20200410091447719](Modul-1.assets/image-20200410091447719.png)
 
-View the dashboard
 
-You can launch the app performance dashboard by selecting `Open Performance Dashboard`:
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LpTxyUN9fd2t5DB-0D5%2F-LvPwN9PBPpKUExzbfZJ%2F-Lq7zWqhyTL6YUAPYYiz%2Fjs_lab1_app_performance.png?generation=1575631295327323&alt=media)
+You can launch the app performance dashboard by selecting `Performance Dashboard`:
 
-Open application performance
+![image-20200410091806166](Modul-1.assets/image-20200410091806166.png)
+
+
 
 The performance dashboard will open in the browser:
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LpTxyUN9fd2t5DB-0D5%2F-LvPwN9PBPpKUExzbfZJ%2F-Lq7zWqjeUe8JfhwK0pT%2Fjs_lab1_app_performance_dashboard.png?generation=1575631301936863&alt=media)
+![image-20200410092828595](Modul-1.assets/image-20200410092828595.png)
 
-View the performance dashboard
 
-You can click Run Test and have Monitor and Performance dashboards side by side during the test:
 
-![img](https://gblobscdn.gitbook.com/assets%2F-LpTxyUN9fd2t5DB-0D5%2F-LvPwN9PBPpKUExzbfZJ%2F-Lq7zWqlrk-4HwGuNEeL%2Fjs_lab1_app_side_by_side_perf_test.png?generation=1575631302877131&alt=media)
+You can click `Run Test`, give a name and start. Set Application Metrics and Performance Dashboard side-by-side and `Run` the test. Observe the metrics during the run - it will take few minutes. Feel free to change to "Profiling" tab to check profiling statistics.
 
-Run test and monitor results
+The performance dashboard requires to have more than one run - so `Run` the test again. Fell free to change test settings - changing "Duration" will decreate the testing time.
 
-> **NOTE:** Profiling the node.js code is currently not working, an [issue](https://github.com/eclipse/codewind/issues/533) is opened on the github repo for the codewind node.js profiler extension.
+![image-20200410094415743](Modul-1.assets/image-20200410094415743.png)
 
-**Congratulations**! You've just completed the intro exercises for Appsody and Codewind!
 
-[
-](https://cloudpakforapplications.gitbook.io/workshop/day-1/about-day-1)
+
+# 6. Lab finished
+
+Congratulations**! You've just completed the intro exercises for Appsody and Codewind!
+
