@@ -561,63 +561,92 @@ const health = require('@cloudnative/health-connect');
 const fs = require('fs');
 
 require('appmetrics-prometheus').attach();
-
+(...)
 ```
 
 We will modify this file by adding two lines, to import helmet (with `require()`), and to enable it with `app.use()`:
 
-<TUUUU>
+```
+const helmet = require('helmet');
+```
+
+```
+app.use(helmet());
+```
+
+
+
+so it looks like below:
 
 ```
 // Requires statements and code for non-production mode usage
 if (!process.env.NODE_ENV || !process.env.NODE_ENV === 'production') {
-require('appmetrics-dash').attach();
+  require('appmetrics-dash').attach();
 }
 const express = require('express');
-const helmet = require('helmet');
 const health = require('@cloudnative/health-connect');
 const fs = require('fs');
-
+const helmet = require('helmet');
 
 require('appmetrics-prometheus').attach();
-
 
 const app = express();
 app.use(helmet());
 
-
 const basePath = __dirname + '/user-app/';
-...
+(...)
 ```
+
+
 
 Since we have added a new module that is required, we must also update the dependency management (package.json), to ensure this is pulled in:
 
+```
+gedit image/project/package.json
+```
+
+
+
+section dependencies contains:
+
 
 
 ```
-{
-...
-"dependencies": {
+  "dependencies": {
+    "@cloudnative/health-connect": "^2.0.0",
+    "appmetrics-prometheus": "^3.0.0",
+    "express": "~4.16.0"
+  },
+```
+
+we have to add:
+
+```
+"helmet": "^3.21.1"
+```
+
+so it looks like below:
+
+```
+  "dependencies": {
     "@cloudnative/health-connect": "^2.0.0",
     "appmetrics-prometheus": "^3.0.0",
     "express": "~4.16.0",
     "helmet": "^3.21.1"
-},
-...
-}
+  },
 ```
 
+
+
 Now that we have modified our stack, we need to re-package it, using the same command as before:
-
-
 
 ```
 appsody stack package
 ```
 
-> **NOTE** The `appsody run` command should pull down the latest packaged version, but in case this doesn't work, delete the directory and re-initialize.
 
 
+let's test the image
 
 ```
 cd ~/appsody-apps
@@ -627,36 +656,39 @@ cd test-my-stack
 appsody init dev.local/my-nodejs-express
 ```
 
+
+
 This will have updated the dev.local index, so we can again go and run our application:
-
-
 
 ```
 appsody run
 ```
 
-If we now hit the endpoint as before with `curl` in verbose mode, we can see if the HTTP headers have changed:
 
 
+If we now hit the endpoint as before with `curl` in verbose mode, we can see if the HTTP headers have changed. So - open new terminal window and issue the command:
 
 ```
 curl -v localhost:3000
 ```
 
-You should now see security related headers like `X-DNS-Prefetch-Control`, `Strict-Transport-Security`, and `X-Download-Options`:
+You should now see security related headers like:
 
+`X-DNS-Prefetch-Control`, `Strict-Transport-Security`, and `X-Download-Options`:
 
+so the output should look like below:
 
 ```
-$ curl -v localhost:3000
+linux@lnx39:~$ curl -v localhost:3000
+* Rebuilt URL to: localhost:3000/
 *   Trying 127.0.0.1...
 * TCP_NODELAY set
 * Connected to localhost (127.0.0.1) port 3000 (#0)
 > GET / HTTP/1.1
 > Host: localhost:3000
-> User-Agent: curl/7.64.1
+> User-Agent: curl/7.58.0
 > Accept: */*
->
+> 
 < HTTP/1.1 200 OK
 < X-DNS-Prefetch-Control: off
 < X-Frame-Options: SAMEORIGIN
@@ -668,22 +700,24 @@ $ curl -v localhost:3000
 < Content-Type: text/html; charset=utf-8
 < Content-Length: 19
 < ETag: W/"13-0ErcqB22cNteJ3vXrBgUhlCj8os"
-< Date: Fri, 08 Nov 2019 19:39:22 GMT
+< Date: Wed, 15 Apr 2020 13:28:51 GMT
 < Connection: keep-alive
-<
+< 
 * Connection #0 to host localhost left intact
-Hello from Appsody!*
+Hello from Appsody!
 ```
 
 As you should see, because the stack now incorporates helmet, the HTTP headers have changes, and our application runs with this protection. The inclusion of helmet is just an example of some of the security hardening you might want to take within your own enterprise.
 
-Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
+Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory or just click `ctrl-C` in the appsody terminal window.
+
+
 
 ## 4. Use the new stack in our example application
 
-A final step is to switch the actual quote-frontend application we built in [Exercise 2]() to use our new stack (rather than the original `nodejs-express` stack).
+A final step is to switch the actual quote-frontend application we built in previous exercise to use our new stack (rather than the original `nodejs-express` stack).
 
-The formal way of doing this is to repeat the steps from Exercise 2, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
+The formal way of doing this is to repeat the steps from the Exercise, where the new project is initialized (using our new stack), and the dependencies and code for the frontend are copied into the new project directory. However, in this case, where we have not changed anything that is actually placed directly in the project directory, we can take a short cut and just update the project to point at our new stack. This also gives you a bit more of an idea as to how an application project is linked to a stack. In the `quote-frontend` directory you created in Exercise 2, you should see a file called `.appsody-config.yaml`, which was created by the `appsody init` step.
 
 
 
@@ -697,29 +731,26 @@ You should see output similar to the following:
 
 
 ```
-$ ls -al
-total 192
-drwxr-xr-x  16 henrynash  staff    512 15 Oct 12:42 .
-drwxr-xr-x+ 85 henrynash  staff   2720 17 Oct 21:37 ..
--rw-r--r--   1 henrynash  staff     64 19 Oct 11:10 .appsody-config.yaml
--rw-r--r--   1 henrynash  staff   1316 15 Oct 11:12 .gitignore
-drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:12 .vscode
--rw-rw-r--   1 henrynash  staff    806 15 Oct 12:50 app-deploy.yaml
--rw-r--r--   1 henrynash  staff    290 15 Oct 11:15 app.js
-drwxr-xr-x   4 henrynash  staff    128 15 Oct 11:15 config
-drwxr-xr-x   2 henrynash  staff     64 15 Oct 11:16 node_modules
--rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_dc.log
--rw-r--r--   1 henrynash  staff      0 15 Oct 11:19 nodejs_restclient.log
--rw-r--r--@  1 henrynash  staff  73319 15 Oct 11:16 package-lock.json
--rw-r--r--   1 henrynash  staff    615 15 Oct 11:15 package.json
--rw-r--r--   1 henrynash  staff   2779 15 Oct 11:15 quote.js
-drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:12 test
-drwxr-xr-x   3 henrynash  staff     96 15 Oct 11:15 views
+$ ls -la
+total 100
+drwxr-xr-x 7 linux linux  4096 Apr 10 09:36 .
+drwxr-xr-x 5 linux linux  4096 Apr 15 13:28 ..
+-rw-r--r-- 1 linux linux   290 Apr 10 09:34 app.js
+-rw-r--r-- 1 linux linux   104 Apr 10 09:21 .appsody-config.yaml
+drwxr-xr-x 2 linux linux  4096 Apr 10 09:34 config
+-rw-r--r-- 1 linux linux  1316 Apr 10 09:21 .gitignore
+drwxr-xr-x 2 root  root   4096 Apr 10 09:36 node_modules
+-rw-r--r-- 1 linux linux   591 Apr 10 09:33 package.json
+-rw-r--r-- 1 linux linux 51421 Apr 10 09:21 package-lock.json
+-rw-r--r-- 1 linux linux  2779 Apr 10 09:34 quote.js
+drwxr-xr-x 2 linux linux  4096 Apr 10 09:21 test
+drwxr-xr-x 2 linux linux  4096 Apr 10 09:34 views
+drwxr-xr-x 2 linux linux  4096 Apr 10 09:21 .vscode
 ```
 
+
+
 Inspecting that file, reveals that it contains a pointer to the stack:
-
-
 
 ```
 cat .appsody-config.yaml
@@ -730,24 +761,36 @@ Should output a configuration that uses `nodejs-express`:
 
 
 ```
+$ cat .appsody-config.yaml
+id: "20200410092139.15574135"
 project-name: quote-frontend
-stack: kabanero/nodejs-express:0.2
+stack: docker.io/kabanero/nodejs-express:0.2
 ```
 
-We can simply change the second line to, instead, point to our new stack, i.e.:
+
+
+We can simply change the third line to, instead, point to our new stack, i.e.:
 
 > **NOTE**: When using a stack that is in development, it will carry semantic versioning derived from the original copied stack in addition to a latest tag.
 
 
 
+```gedit 
+gedit .appsody-config.yaml
 ```
+
+change to:
+```
+id: "20200410092139.15574135"
 project-name: quote-frontend
 stack: dev.local/appsody/my-nodejs-express:latest
 ```
 
+Do not change the id line, leave as-is.
+
+
+
 Now re-run the frontend with `appsody run`:
-
-
 
 ```
 appsody run
@@ -755,27 +798,38 @@ appsody run
 
 It should use our new stack:
 
-
-
 ```
 $ appsody run
 Running development environment...
 Using local cache for image dev.local/appsody/my-nodejs-express:latest
-...
+Running command: docker run --rm -p 8080:8080 -p 9229:9229 -p 3000:3000 --name quote-frontend -v /home/linux/appsody-apps/quote-frontend/:/project/user-app -v appsody-quote-frontend-20200410093619.68932334:/project/user-app/node_modules -v appsody-controller-0.3.4:/.appsody -t --entrypoint /.appsody/appsody-controller dev.local/appsody/my-nodejs-express:latest "--mode=run"
+[Container] Running APPSODY_PREP command: npm install --prefix user-app
+npm WARN deprecated core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+npm WARN saveError EACCES: permission denied, open '/project/user-app/package.json.3395703535'
+npm WARN saveError EACCES: permission denied, open '/project/user-app/package-lock.json.1614718800'
+audited 437 packages in 4.935s
+[Container] found 1 low severity vulnerability
+[Container]   run `npm audit fix` to fix them, or `npm audit` for details
+[Container] Running command:  npm start
+[Container] 
+[Container] > nodejs-express@0.2.10 start /project
+[Container] > node server.js
+[Container] 
+[Container] [Wed Apr 15 13:36:32 2020] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 5.1.1.202004151326 (Agent Core 4.0.5)
+[Container] [Wed Apr 15 13:36:33 2020] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
 [Container] App started on PORT 3000
+
 ```
 
-We can confirm that our new HTTP protection is being used by, instead of using a browser, again using `curl` in verbose mode to hit the published endpoint:
 
 
+We can confirm that our new HTTP protection is being used by, instead of using a browser, again using `curl` in verbose mode to hit the published endpoint. Open separate terminal window and issue the command:
 
 ```
 curl -v localhost:3000
 ```
 
 You should see output similar to the following:
-
-
 
 ```
 $ curl -v localhost:3000
@@ -808,6 +862,6 @@ Found. Redirecting to /quote
 
 We can tell our sample application is now using the new stack because it includes the new security related headers.
 
-Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory.
+Stop this current appsody run by running `appsody stop` in a separate terminal window, from within the same directory or just click `ctrl-C` in the appsody terminal window..
 
 **Congratulations**! We have successfully built and tested out our modified stack - and seen how applications built against this stack automatically gain the (new) features it provides (without the application developer having to do anything themselves). In later exercises, we will discover how to publish this stack for other developers to utilize to build their own applications.
